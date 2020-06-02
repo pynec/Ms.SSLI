@@ -122,15 +122,15 @@ public class sim_data {
 		}
 
 	public static void main(String[] args) throws Exception{
+		//numind, numloci, numsexloci 
 		sim_data output = new sim_data(10, 10, 3);		
 		List<Integer> maleLoci = output.sex_assignment();
 		int[][] out = output.populate_matrix(maleLoci);
-		System.out.println(maleLoci);
+		//System.out.println(maleLoci);
 		
-
-for(int[] row : out) {
-			System.out.println(Arrays.toString(row));	}
-		
-	}
+//for(int[] row : out) {
+//			System.out.println(Arrays.toString(row));	}
+//		
+}
 	
 }
