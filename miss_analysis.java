@@ -2,12 +2,15 @@ package missingness;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
+
 import missingness.sim_data;
 
 
@@ -66,22 +69,34 @@ public class miss_analysis {
 	
 	//method that imports a matrix file
 	public void import_file (String file) throws IOException{
-		FileReader fileReader = new FileReader(file);
-		BufferedReader br = new BufferedReader(fileReader);
-		List<String> filelines = new ArrayList<String>();
-		String line = null;
-		while ((line = br.readLine()) != null) {
-			filelines.add(line);
+		Scanner s = new Scanner(new File(file));
+		List<List<String>> filelines = new ArrayList<>();
+		String line = new String();
+		while(s.hasNextLine()) {
+			List<String> list = new ArrayList<>();
+			line = (s.nextLine());
+			list.add(line);
+			filelines.add(list);
 		}
-		br.close();
-		this.lines = filelines; 
+		s.close();
+		miss_analysis object = new miss_analysis();
+		object.readcount(filelines);
+	}
+	
+	public void readcount (List<List<String>> filelines) {
+		//System.out.println(filelines);	
+		
+		int size = filelines.size();
+		int[][] readcount_matrix = new int[size][];
+				
+				
+				
 	}
 	
 	
-	
 	public static void main(String[] args) throws Exception{
-		
-		sim_data output = new sim_data(40, 40, 10);		
+		//numind, numloci, numsexloci 
+		sim_data output = new sim_data(20, 20, 5);		
 		List<Integer> maleLoci = output.sex_assignment();
 		int[][] out = output.populate_matrix(maleLoci);
 		
@@ -93,10 +108,13 @@ public class miss_analysis {
 		
 		
 		List<Integer> sex_specific = obj.in_both(nummales, numfemales, nloci, out);
-		System.out.println(sex_specific);
-		
-		obj.import_file("/Users/cassandrepyne/Documents/variants.txt");
+		//System.out.println(sex_specific);
+//		for(int[] row : out) {
+//		System.out.println(Arrays.toString(row));	}
 	
+		
+		obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
+		
 
 }
 }
