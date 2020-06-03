@@ -68,7 +68,7 @@ public class miss_analysis {
 	}
 	
 	//method that imports a matrix file
-	public void import_file (String file) throws IOException{
+	public int[][] import_file (String file) throws IOException{
 		Scanner s = new Scanner(new File(file));
 		List<List<String>> filelines = new ArrayList<>();
 		String line = new String();
@@ -80,16 +80,56 @@ public class miss_analysis {
 		}
 		s.close();
 		miss_analysis object = new miss_analysis();
-		object.readcount(filelines);
+		List<String> list = object.import_sex_info("/Users/cassandrepyne/Documents/sex_info.txt");
+		int[][] matrix = object.readcount(filelines,list);
+		return matrix;
 	}
 	
-	public void readcount (List<List<String>> filelines) {
+	public List<String> import_sex_info (String file) throws IOException{
+		Scanner s = new Scanner(new File(file));
+		List<String> list = new ArrayList<>();
+		while(s.hasNext()) {		
+			list.add(s.next());
+		}
+		s.close();
+		return list;
+	}
+	
+	public int[][] readcount (List<List<String>> filelines, List<String> sex_info) {
 		//System.out.println(filelines);	
 		
+ 		int[] sex_row = new int[89];
+		for(int s = 0; s < sex_info.size(); s++) {
+			int val = Integer.parseInt(sex_info.get(s));
+			sex_row[s] = val;
+		}
+		
 		int size = filelines.size();
-		int[][] readcount_matrix = new int[size][];
-				
-				
+		
+		//rows = loci, columns = individuals 
+		int[][] readcount_matrix = new int[size+1][];
+	
+		//i < size (100) 
+		for(int i = 0; i < size; i++) {
+			int[] matrix_row = new int[89];
+			List<String> list = new ArrayList<>();
+			list = filelines.get(i);
+			String str_list = list.get(0);
+			String[] split_str = str_list.split(",");
+			int index = 0;
+			for(int j = 2; j < split_str.length; j += 2) {
+				int val1 = Integer.parseInt(split_str[j]);
+				int val2 = Integer.parseInt(split_str[j+1]);
+				int readcount = val1 + val2;
+				matrix_row[index] = readcount;
+				index++;
+				}
+			readcount_matrix[i] = matrix_row;
+			}
+	
+		readcount_matrix[size] = sex_row;
+
+		return readcount_matrix;
 				
 	}
 	
@@ -108,13 +148,19 @@ public class miss_analysis {
 		
 		
 		List<Integer> sex_specific = obj.in_both(nummales, numfemales, nloci, out);
+
+		
+		int[][] matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_missingness.txt");
+		
+		
 		//System.out.println(sex_specific);
-//		for(int[] row : out) {
-//		System.out.println(Arrays.toString(row));	}
+//	for(int[] row : matrix) {
+//	System.out.println(Arrays.toString(row));	}
 	
 		
-		obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
-		
+		miss_analysis object = new miss_analysis();
+		List<Integer> sex_list = object.in_both(36, 53, 100, matrix);
+		System.out.println(sex_list);
 
 }
 }
