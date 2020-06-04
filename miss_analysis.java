@@ -1,9 +1,7 @@
 package missingness;
 
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -12,7 +10,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import missingness.sim_data;
-
 
 public class miss_analysis {
 	List<String> lines;
@@ -37,7 +34,7 @@ public class miss_analysis {
 				if(sim_data[i][j] == 0) {
 					if(!temp_zero.contains(i)) {
 					temp_zero.add(i); }	} } }
-
+		
 		//make sure that these loci are actually sex specific 
 		for(int i = 0; i < nloci; i++) {
 			//list of SEX of individuals with 0 at loci in temp_zero (so just 1 and 2s) 
@@ -45,7 +42,7 @@ public class miss_analysis {
 			//if the temp_zero (containing potential sex specific loci) has the indexed loci than further investigate 
 			if(temp_zero.contains(i)) {
 				//loop through individuals and get sex information from the individuals with a 0 for that loci 
-			for(int j = 0; j < nind; j++) {
+				for(int j = 0; j < nind; j++) {
 					if(sim_data[i][j] == 0) {
 						int sex = sim_data[nloci][j];
 						ind_sex.add(sex);
@@ -60,14 +57,13 @@ public class miss_analysis {
 				else {
 					count_females++; }}
 		//add to final sex_specific list if all individuals of one sex do not have the loci and the other sex does 
-		if((ind_sex.size() >= nummales || ind_sex.size() >= numfemales)) {
+		if((count_males >= nummales || count_females >= numfemales)) {
 			sex_specific.add(i);
 		} } }		
 		return sex_specific;
-		
 	}
 	
-	//method that imports a matrix file
+	//method that imports variants file 
 	public int[][] import_file (String file) throws IOException{
 		Scanner s = new Scanner(new File(file));
 		List<List<String>> filelines = new ArrayList<>();
@@ -79,12 +75,16 @@ public class miss_analysis {
 			filelines.add(list);
 		}
 		s.close();
+		//new object to load in next file 
 		miss_analysis object = new miss_analysis();
+		//load in sex information (1 and 2 per individual) 
 		List<String> list = object.import_sex_info("/Users/cassandrepyne/Documents/sex_info.txt");
+		//call readcount method to format the variant information into a matrix 
 		int[][] matrix = object.readcount(filelines,list);
 		return matrix;
 	}
 	
+	//method that imports sex information file 
 	public List<String> import_sex_info (String file) throws IOException{
 		Scanner s = new Scanner(new File(file));
 		List<String> list = new ArrayList<>();
@@ -95,21 +95,19 @@ public class miss_analysis {
 		return list;
 	}
 	
+	//method that transforms variant information to a matrix for the missingness script 
 	public int[][] readcount (List<List<String>> filelines, List<String> sex_info) {
-		//System.out.println(filelines);	
-		
+		//initalize the last row of the final matrix (i.e. sex information: 1 & 2) 
  		int[] sex_row = new int[89];
 		for(int s = 0; s < sex_info.size(); s++) {
 			int val = Integer.parseInt(sex_info.get(s));
 			sex_row[s] = val;
 		}
-		
 		int size = filelines.size();
-		
 		//rows = loci, columns = individuals 
 		int[][] readcount_matrix = new int[size+1][];
-	
-		//i < size (100) 
+		//loop through filelines and add every 2 read depth values 
+		//(so there is one per individual) and add to final matrix
 		for(int i = 0; i < size; i++) {
 			int[] matrix_row = new int[89];
 			List<String> list = new ArrayList<>();
@@ -117,6 +115,7 @@ public class miss_analysis {
 			String str_list = list.get(0);
 			String[] split_str = str_list.split(",");
 			int index = 0;
+			//start at j = 2 to remove initial chr information
 			for(int j = 2; j < split_str.length; j += 2) {
 				int val1 = Integer.parseInt(split_str[j]);
 				int val2 = Integer.parseInt(split_str[j+1]);
@@ -126,41 +125,30 @@ public class miss_analysis {
 				}
 			readcount_matrix[i] = matrix_row;
 			}
-	
+		//add sex information to end of matrix 
 		readcount_matrix[size] = sex_row;
-
 		return readcount_matrix;
-				
 	}
-	
 	
 	public static void main(String[] args) throws Exception{
 		//numind, numloci, numsexloci 
-		sim_data output = new sim_data(20, 20, 5);		
-		List<Integer> maleLoci = output.sex_assignment();
-		int[][] out = output.populate_matrix(maleLoci);
 		
+		//simulation data test 
+//		sim_data output = new sim_data(20, 20, 5);		
+//		List<Integer> maleLoci = output.sex_assignment();
+//		int[][] out = output.populate_matrix(maleLoci);
 		miss_analysis obj = new miss_analysis();
-		
-		int nummales = output.nummales;
-		int numfemales = output.numfemales;
-		int nloci = output.nloci;
-		
-		
-		List<Integer> sex_specific = obj.in_both(nummales, numfemales, nloci, out);
-
-		
-		int[][] matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_missingness.txt");
-		
-		
-		//System.out.println(sex_specific);
-//	for(int[] row : matrix) {
-//	System.out.println(Arrays.toString(row));	}
+//		int nummales = output.nummales;
+//		int numfemales = output.numfemales;
+//		int nloci = output.nloci;
+//		List<Integer> sex_specific = obj.in_both(nummales, numfemales, nloci, out);
 	
-		
+		int[][] matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_missingness.txt");
 		miss_analysis object = new miss_analysis();
-		List<Integer> sex_list = object.in_both(36, 53, 100, matrix);
+		//nummales, numfemales, nloci, matrix 
+		List<Integer> sex_list = object.in_both(36, 53, 68186, matrix);
 		System.out.println(sex_list);
+		System.out.println(sex_list.size());
 
 }
 }
