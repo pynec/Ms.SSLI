@@ -11,13 +11,12 @@ public class miss_analysis_opt {
 
 	List<Integer> male_index_global;
 	List<Integer> female_index_global; 
-	int[][] both_sexes;
-	
+	static int[][] both_sexes;
+	static int[][] zeroes; 
 	public miss_analysis_opt(){}
 	
-	
-	
-	public int[][] import_file(String file) throws IOException{
+
+	public void import_file(String file) throws IOException{
 		Scanner s = new Scanner(new File(file));
 		List<List<String>> filelines = new ArrayList<>();
 		String line = new String();
@@ -28,17 +27,13 @@ public class miss_analysis_opt {
 			filelines.add(list);
 		}
 		s.close();
-		
-	
 		miss_analysis_opt file_obj = new miss_analysis_opt();
 		
 		List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info.txt");
 		List<Integer> male_index = file_obj.male_index_list(sex_info); male_index_global = male_index;
 		List<Integer> female_index = file_obj.female_index_list(sex_info); female_index_global = female_index; 
-		int[][] dat_matrix  = file_obj.create_matrix(filelines,sex_info);
-	
-		
-		return null;
+		file_obj.create_matrix(filelines,sex_info);
+
 		
 	}
 	
@@ -78,25 +73,15 @@ public class miss_analysis_opt {
 	
 
 	
-	public int[][] create_matrix(List<List<String>> filelines, List<String> sex_info){
-	
-		//initialize the temporary version of both_sexes global matrix with an arbitrary dimension (will most likely be less than filelines.size() but need to initialize it with something)
-		//int[][] group_both_sexes = new int[filelines.size()][];
-		
-		//again, initializing this matrix with an arbitrary dimension size 
+	public void create_matrix(List<List<String>> filelines, List<String> sex_info){
 	
 		int[][] matrix = new int[filelines.size()][sex_info.size()];
 		
-		//I think group A and group B are the same as zero list and non zero list? 
-		//List<Integer> temp_groupA = new ArrayList<>();
-		//List<Integer> temp_groupB = new ArrayList<>();
 		List<String> SNP_IDs = new ArrayList<>();
 		List<Integer> zero_list = new ArrayList<>();
 		List<Integer> non_zero_list = new ArrayList<>();
 		
 		for(int i = 0; i < filelines.size(); i++) {
-			
-			//adding an extra column for SNP ID 
 			int[] matrix_row = new int[sex_info.size()];
 			List<String> list = new ArrayList<>();
 	
@@ -107,49 +92,85 @@ public class miss_analysis_opt {
 		
 		
 			for(int j = 2; j < split_str.length; j += 2) {
-				
 				int sum = Integer.parseInt(split_str[j]) + Integer.parseInt(split_str[j+1]);
 				matrix_row[index] = sum;
-				
 				if(sum == 0 && !zero_list.contains(i)) {
 					zero_list.add(i);
 				}
-				
 				index++;
-			
 			}
 			if(!zero_list.contains(i)) {
 				non_zero_list.add(i);
 			}
-			
 			matrix[i] = matrix_row;
-			
-			
 		}
 		
-		System.out.println(zero_list.size());
-		System.out.println(non_zero_list.size());
-//	
+		int[][] group_both_sexes = new int[non_zero_list.size()][sex_info.size()];
+		int[][] temp_zero = new int[zero_list.size()][sex_info.size()];
+	
+		for(int i = 0; i < non_zero_list.size(); i++) {
+			group_both_sexes[i] = matrix[non_zero_list.get(i)];
+		}
+	
+		for(int i = 0; i < zero_list.size(); i++) {
+			temp_zero[i] = matrix[zero_list.get(i)];
+		}
+		both_sexes = group_both_sexes;
+		zeroes = temp_zero;
+	
+	}
+	
+	public void separate_groups_by_zeroes() {
+		
+		
+		int nind = male_index_global.size() + female_index_global.size();
+		
+		//System.out.println(male_index_global); System.out.println(female_index_global);
+		
+		int[][] matrix = miss_analysis_opt.zeroes;
+	
+		List<Integer> final_zero_list = new ArrayList<>();
+		List<Integer> add_to_both_sexes = new ArrayList<>();
+		
+	
+		for(int i= 0; i < matrix.length; i++) {
+			List<Integer> zero_index = new ArrayList<>();
+			int[] row_temp = new int[nind];
+			
+			row_temp = matrix[i];
+			
+			for(int j = 0; j < nind; j++) {
+				if(row_temp[j] == 0) {
+					zero_index.add(j);
+				}
+			}
+			
+			Boolean compare_fem = zero_index.retainAll(female_index_global);
+			Boolean compare_male = zero_index.retainAll(male_index_global);
+			if(compare_fem == false || compare_male == false) {
+				final_zero_list.add(i);
+			}
+			else {
+				add_to_both_sexes.add(i);
+			}
+		
+		}
+	//	System.out.println(final_zero_list);
+	//	System.out.println(add_to_both_sexes);
 //		for(int[] row : matrix) {
-//			System.out.println(Arrays.toString(row));	
-//		
-//		}
-		
+//			System.out.println(Arrays.toString(row));	}
 
-		//System.out.println(temp_groupB);
-		
-		//both_sexes = group_both_sexes;
-		return null;
+	
+
 		
 	}
 	
 	
 	
-	
 	public static void main(String[] args) throws Exception{
 		miss_analysis_opt obj = new miss_analysis_opt();
-		
-		int[][] matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
+		obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
+		obj.separate_groups_by_zeroes();
 		
 		
 		
