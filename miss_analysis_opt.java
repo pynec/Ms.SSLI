@@ -13,7 +13,11 @@ public class miss_analysis_opt {
 	List<Integer> female_index_global; 
 	static int[][] both_sexes;
 	static int[][] zeroes; 
+	static int[][] final_sex_specific;
+	static int[][] final_both_sexes;
+	
 	public miss_analysis_opt(){}
+
 	
 
 	public void import_file(String file) throws IOException{
@@ -122,7 +126,6 @@ public class miss_analysis_opt {
 	
 	public void separate_groups_by_zeroes() {
 		
-		
 		int nind = male_index_global.size() + female_index_global.size();
 		
 		//System.out.println(male_index_global); System.out.println(female_index_global);
@@ -155,13 +158,27 @@ public class miss_analysis_opt {
 			}
 		
 		}
-	//	System.out.println(final_zero_list);
-	//	System.out.println(add_to_both_sexes);
-//		for(int[] row : matrix) {
-//			System.out.println(Arrays.toString(row));	}
-
+		int[][] sex_specific_list = new int[final_zero_list.size()][nind];
+		
+		for(int i = 0; i < final_zero_list.size(); i++) {
+			sex_specific_list[i] = matrix[final_zero_list.get(i)];
+		}
 	
+		
+		
+		
+		int[][] both_sexes_list = new int[miss_analysis_opt.both_sexes.length + add_to_both_sexes.size()][nind];
+		for(int i = 0; i < miss_analysis_opt.both_sexes.length; i++) {
+			both_sexes_list[i] = miss_analysis_opt.both_sexes[i];
+			
+		}
+		int index = 0;
+		for(int i = miss_analysis_opt.both_sexes.length; i < (miss_analysis_opt.both_sexes.length + add_to_both_sexes.size()); i++) {
+			both_sexes_list[i] = matrix[add_to_both_sexes.get(index)];
+			index++;
+		}
 
+		final_sex_specific = sex_specific_list; final_both_sexes = both_sexes_list;
 		
 	}
 	
