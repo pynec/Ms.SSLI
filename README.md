@@ -27,3 +27,10 @@ At this point, I will have 2 matrcies: GROUP A and GROUP B
 
 After that, the next step is to deal with the both_sexes matrix and split into 2 random mixed sex subgroups and asses frequency of loci occuring in just one subgroup
 
+
+Update on miss_analysis_opt.java 8/13/2020
+Made two new matricies (one is final in both sexes matrix and the other is the final in one sex matrix)
+
+These are the final GROUP A and GROUP B matricies 
+
+
