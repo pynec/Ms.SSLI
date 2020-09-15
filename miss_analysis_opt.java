@@ -15,6 +15,7 @@ public class miss_analysis_opt {
 	static int[][] zeroes; 
 	static int[][] final_sex_specific;
 	static int[][] final_both_sexes;
+	int numind;
 	
 	public miss_analysis_opt(){}
 
@@ -174,15 +175,32 @@ public class miss_analysis_opt {
 			both_sexes_list[i] = matrix[add_to_both_sexes.get(index)];
 			index++;
 		}
-		final_sex_specific = sex_specific_list; final_both_sexes = both_sexes_list;
+		final_sex_specific = sex_specific_list; final_both_sexes = both_sexes_list; numind = nind;
 	}
 	
 	
+	public void group_B() {
+		transpose(final_both_sexes, numind);
+			
+	}
+	
+
+	public int[][] transpose(int[][] original_matrix, int nind) {
+		int[][] transposed_matrix = new int[nind][original_matrix.length];
+		for(int i = 0; i < original_matrix.length; i++) {
+			for(int j = 0; j < nind; j++) {
+				transposed_matrix[j][i] = original_matrix[i][j];
+			}
+		}
+		return null;
+		
+	}
 	
 	public static void main(String[] args) throws Exception{
 		miss_analysis_opt obj = new miss_analysis_opt();
 		obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
 		obj.separate_groups_by_zeroes();	
+		obj.group_B();
 	}	
 }
 
