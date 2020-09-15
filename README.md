@@ -30,7 +30,13 @@ After that, the next step is to deal with the both_sexes matrix and split into 2
 
 Update on miss_analysis_opt.java 8/13/2020
 Made two new matricies (one is final in both sexes matrix and the other is the final in one sex matrix)
-
 These are the final GROUP A and GROUP B matricies 
 
 
+Update on miss_analysis_opt.java 9/15/2020
+
+Started working on the determining hte SSLT (99th percentile of chance distribution).
+Using group B (non-sex specific loci) but matrix needs to be transposed in order to split matrix by individuals.
+So wrote method transpose() that transposes matrices
+Idea: shuffle transposed matrix rows (so by individual) then take the first half and determine frequency of loci then do the same with the second half. Will have to do this for multiple iterations.
+Next step: Try to split the matrix in half. 
