@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class miss_analysis_opt {
@@ -180,11 +182,16 @@ public class miss_analysis_opt {
 	
 	
 	public void group_B() {
-		transpose(final_both_sexes, numind);
-			
-	}
+		int[][] ind_matrix = new int[numind][final_both_sexes.length];
+		ind_matrix = transpose(final_both_sexes, numind);
+		
+		//shuffle the matrix (individuals - rows)
+		int[][] shuffled_matrix = shuffle_matrix(ind_matrix);
 	
+	}
 
+
+	//method that transposes matrices (swaps rows and columns) 
 	public int[][] transpose(int[][] original_matrix, int nind) {
 		int[][] transposed_matrix = new int[nind][original_matrix.length];
 		for(int i = 0; i < original_matrix.length; i++) {
@@ -192,9 +199,19 @@ public class miss_analysis_opt {
 				transposed_matrix[j][i] = original_matrix[i][j];
 			}
 		}
-		return null;
-		
+		return transposed_matrix;
 	}
+	
+	//method that shuffles the rows of a matrix
+	public int[][] shuffle_matrix(int[][] matrix) {
+		List<int[]> matrix_list = Arrays.asList(matrix);
+		Collections.shuffle(matrix_list);
+		matrix = matrix_list.toArray(new int[0][0]);
+		return matrix;
+
+	}
+	
+	
 	
 	public static void main(String[] args) throws Exception{
 		miss_analysis_opt obj = new miss_analysis_opt();
