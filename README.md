@@ -39,4 +39,10 @@ Started working on the determining hte SSLT (99th percentile of chance distribut
 Using group B (non-sex specific loci) but matrix needs to be transposed in order to split matrix by individuals.
 So wrote method transpose() that transposes matrices
 Idea: shuffle transposed matrix rows (so by individual) then take the first half and determine frequency of loci then do the same with the second half. Will have to do this for multiple iterations.
-Next step: Try to split the matrix in half. 
+Next step: Try to split the matrix in half.
+
+Update on miss_analysis_opt.java 9/16/2020
+
+Wrote a method to shuffle the rows of the transposed matrix (method = shuffle_matrix()). Next step: can now recursively shuffle the matrix and take the first half the matrix as mixed sex group 1 and assess frequency of loci.
+
+
