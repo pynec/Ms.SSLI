@@ -19,7 +19,8 @@ public class miss_analysis_opt {
 	static int[][] final_both_sexes;
 	int numind;
 	
-	public miss_analysis_opt(){}
+	public miss_analysis_opt(){
+	}
 
 	
 	//method that takes a file name as input and creates a matrix 
@@ -177,19 +178,22 @@ public class miss_analysis_opt {
 			both_sexes_list[i] = matrix[add_to_both_sexes.get(index)];
 			index++;
 		}
+	for(int[] row : sex_specific_list) {
+		System.out.println(Arrays.toString(row));	}
 		final_sex_specific = sex_specific_list; final_both_sexes = both_sexes_list; numind = nind;
 	}
 	
-	
-	public void group_B() {
+	public int[][] group_B() {
 		int[][] ind_matrix = new int[numind][final_both_sexes.length];
 		ind_matrix = transpose(final_both_sexes, numind);
 		
-		//shuffle the matrix (individuals - rows)
-		int[][] shuffled_matrix = shuffle_matrix(ind_matrix);
 	
+//		for(int[] row : ind_matrix) {
+//		System.out.println(Arrays.toString(row));	}
+//		System.out.println(ind_matrix.length);
+		return ind_matrix;
+		
 	}
-
 
 	//method that transposes matrices (swaps rows and columns) 
 	public int[][] transpose(int[][] original_matrix, int nind) {
@@ -202,22 +206,13 @@ public class miss_analysis_opt {
 		return transposed_matrix;
 	}
 	
-	//method that shuffles the rows of a matrix
-	public int[][] shuffle_matrix(int[][] matrix) {
-		List<int[]> matrix_list = Arrays.asList(matrix);
-		Collections.shuffle(matrix_list);
-		matrix = matrix_list.toArray(new int[0][0]);
-		return matrix;
-
-	}
-	
-	
 	
 	public static void main(String[] args) throws Exception{
 		miss_analysis_opt obj = new miss_analysis_opt();
 		obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
 		obj.separate_groups_by_zeroes();	
-		obj.group_B();
+		int[][] matrix = obj.group_B();
+		
 	}	
 }
 
