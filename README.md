@@ -51,4 +51,13 @@ Added the SSLT_iteration.java script. This script's goal is to shuffle the trans
 
 So next time: Finish comparing the two lists (only keep loci that are in just one list) and then run that script multiple times. The goal is to add the number of loci that are in just on group to a list and then take the 99th percentile of that list. (so add the loci but also how many individual it occurs in) - see page 6 of Stovall paper 
 
-Do remember that the Stovall paper does say that it is an "estimate" of the number of loci. 
+Do remember that the Stovall paper does say that it is an "estimate" of the number of loci.
+
+Update on miss_analysis_opt.java 10/26/2020
+Stovall paper= find SSLT and that is how you determine which loci are actually sex specific. This means that just because you have loci that are just in one sex it does not mean that they are actually sex specific. So, by determining the SSLT, you now have a threshold by which you can determine which loci are actually sex specific. This is becasue the SSLT is the number of loci that appear in just one sex by chance so if you have a sex specific loci that occurs in more individuals than by "chance (SSLT)" then it should be significanly sex specific.
+
+So, the issue that I am having is fine. This is because even if there are no loci that occur exclusively in one sex by chance than the SSLT would be super low (or 0) so that would indicate that to be sex specific in this system, it doesn't have a minimum number of individuals is must be in.
+
+Finished the SSLT script. So, I added three  methods. group_specific() finds the loci that are just in one sex by counting the number of loci that appear in ALL individuals (will most likely be zero for the small datasets). iterate() is the method that gets the distribution of the number of loci that are exclusively in one group (can adjust the number of times it iterates - should be 1000). percentile() determines the 99th percentile of the distribution.
+
+So next time: double check the percentile method - make sure it is the most efficient. Then, go back to miss_analysis_opt and get the percentile from SSLT_iterations. Then, exclude all loci in GROUP A that fall below the SSLT.
