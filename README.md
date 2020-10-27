@@ -61,3 +61,12 @@ So, the issue that I am having is fine. This is because even if there are no loc
 Finished the SSLT script. So, I added three  methods. group_specific() finds the loci that are just in one sex by counting the number of loci that appear in ALL individuals (will most likely be zero for the small datasets). iterate() is the method that gets the distribution of the number of loci that are exclusively in one group (can adjust the number of times it iterates - should be 1000). percentile() determines the 99th percentile of the distribution.
 
 So next time: double check the percentile method - make sure it is the most efficient. Then, go back to miss_analysis_opt and get the percentile from SSLT_iterations. Then, exclude all loci in GROUP A that fall below the SSLT.
+
+
+Update 10/27/2020
+
+miss_anlaysis_opt.java can now retrieve percentile information (SSLT) from SSLT_iterations.java.
+
+Went back and walked through miss_analysis_opt.java code and realized that separate_groups_by_zeroes() is not actually determining which loci are sex specific. It is just determining the loci that has a few zeroes in one sex and none in the other. This means that the loci is technically in both sexes. So, in order for it to be sex specific it should be not at all in one sex - so there must be 0's in ALL individuals in one sex.
+
+Next time: change if-then parameters in separate_groups_by_zeroes() so it is only adding loci to the final list if there are zeroes in all of one sex. Then, can apply the statistical threshold. So, once the final list is done - can exclude all loci in that list that fall below the SSLT. 
