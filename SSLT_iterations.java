@@ -94,15 +94,13 @@ public List<Integer> iterate(int[][] t) {
 	return loci_dist;
 }
 
-public static int percentile(List<Integer> distribution) {
+public int percentile(List<Integer> distribution) {
 	Collections.sort(distribution);
 	int value = (int) Math.ceil(99 / 100.0 * distribution.size());
 	value = distribution.get(value - 1);
 	return value;
 			
 }
-	
-
 
 public static void main(String[] args) throws Exception{
 	//retrieve transposed matrix from miss_analysis_opt script
@@ -113,6 +111,6 @@ public static void main(String[] args) throws Exception{
 	SSLT_iterations obj_iterate = new SSLT_iterations();
 	List<Integer> distribution = new ArrayList<>();
 	distribution = obj_iterate.iterate(t);
-	int percentile = percentile(distribution);	
+	int percentile = obj_iterate.percentile(distribution);	
 }
 }
