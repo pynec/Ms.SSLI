@@ -102,7 +102,7 @@ public class miss_analysis_opt {
 				int sum = Integer.parseInt(split_str[j]) + Integer.parseInt(split_str[j+1]);
 				matrix_row[index] = sum;
 				//check to see if the sum of pair of allele depths is equal to 0 - if it is then add it to zero_list 
-				//(so these are loci that contain at least one zero so there is a possibility that they are in one sex but not another 
+				//(so these are loci that contain at least one zero so there is a possibility that they are in one sex but not another)
 				if(sum == 0 && !zero_list.contains(i)) {
 					zero_list.add(i);
 				}
@@ -114,7 +114,6 @@ public class miss_analysis_opt {
 			}
 			matrix[i] = matrix_row;
 		}
-		
 		//make matrices out of the non_zero_list and zero_list (will help make final matrices of group A and B (those that are sex specific and those that are not) 
 		int[][] group_both_sexes = new int[non_zero_list.size()][sex_info.size()];
 		int[][] temp_zero = new int[zero_list.size()][sex_info.size()];
@@ -127,7 +126,9 @@ public class miss_analysis_opt {
 		}
 		both_sexes = group_both_sexes;
 		zeroes = temp_zero;
+		
 	}
+
 	
 	//method that determines which of the loci in the zero_list are actually sex specific and adds all other ones to the in_both_sexes matrix
 	public void separate_groups_by_zeroes() {
@@ -139,7 +140,10 @@ public class miss_analysis_opt {
 		List<Integer> final_zero_list = new ArrayList<>();
 		List<Integer> add_to_both_sexes = new ArrayList<>();
 	
-		for(int i= 0; i < matrix.length; i++) {
+		//System.out.println(female_index_global);
+		//System.out.println(male_index_global);
+		
+		for(int i= 0; i < 10; i++) {
 			List<Integer> zero_index = new ArrayList<>();
 			int[] row_temp = new int[nind];
 			row_temp = matrix[i];
@@ -149,16 +153,20 @@ public class miss_analysis_opt {
 					zero_index.add(j);
 				}
 			}
+			System.out.println(zero_index);
 			//boolean T or F if the index of 0 in male or female matches the full list of zero indicies 
 			Boolean compare_fem = zero_index.retainAll(female_index_global);
 			Boolean compare_male = zero_index.retainAll(male_index_global);
 			//if the zeroes do match (a F) then it gets added to the sex specific list 
-			if(compare_fem == false || compare_male == false) {
+			//must be in one sex OR the other (meaning that the loci with 0 is strictly in one sex and the loci is exclusively in the other)
+			if(compare_fem == false ^ compare_male == false) {
 				final_zero_list.add(i);
+				System.out.println(i);
 			}
 			else {
 				add_to_both_sexes.add(i);
 			}
+			
 		}
 		int[][] sex_specific_list = new int[final_zero_list.size()][nind];
 		
@@ -178,19 +186,12 @@ public class miss_analysis_opt {
 			both_sexes_list[i] = matrix[add_to_both_sexes.get(index)];
 			index++;
 		}
-	for(int[] row : sex_specific_list) {
-		System.out.println(Arrays.toString(row));	}
 		final_sex_specific = sex_specific_list; final_both_sexes = both_sexes_list; numind = nind;
 	}
 	
 	public int[][] group_B() {
 		int[][] ind_matrix = new int[numind][final_both_sexes.length];
 		ind_matrix = transpose(final_both_sexes, numind);
-		
-	
-//		for(int[] row : ind_matrix) {
-//		System.out.println(Arrays.toString(row));	}
-//		System.out.println(ind_matrix.length);
 		return ind_matrix;
 		
 	}
@@ -206,12 +207,26 @@ public class miss_analysis_opt {
 		return transposed_matrix;
 	}
 	
+	public void exclude() {
+//	for(int[] row : final_sex_specific) {
+//		System.out.println(Arrays.toString(row));	}
+//	
+//	System.out.println(final_sex_specific.length);
+//	System.out.println(final_sex_specific[0].length);
+//	System.out.println(female_index_global.size());
+	}
+	
 	
 	public static void main(String[] args) throws Exception{
 		miss_analysis_opt obj = new miss_analysis_opt();
 		obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
 		obj.separate_groups_by_zeroes();	
 		int[][] matrix = obj.group_B();
+		SSLT_iterations percentile_object = new SSLT_iterations();
+		List<Integer> distribution = new ArrayList<>();
+		distribution = percentile_object.iterate(matrix);
+		int percentile = percentile_object.percentile(distribution);
+		obj.exclude();
 		
 	}	
 }
