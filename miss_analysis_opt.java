@@ -117,7 +117,6 @@ public class miss_analysis_opt {
 		//make matrices out of the non_zero_list and zero_list (will help make final matrices of group A and B (those that are sex specific and those that are not) 
 		int[][] group_both_sexes = new int[non_zero_list.size()][sex_info.size()];
 		int[][] temp_zero = new int[zero_list.size()][sex_info.size()];
-	
 		for(int i = 0; i < non_zero_list.size(); i++) {
 			group_both_sexes[i] = matrix[non_zero_list.get(i)];
 		}
@@ -136,14 +135,11 @@ public class miss_analysis_opt {
 		
 		//matrix = zero_list from create_matrix() method 
 		int[][] matrix = miss_analysis_opt.zeroes;
-	
+		
 		List<Integer> final_zero_list = new ArrayList<>();
 		List<Integer> add_to_both_sexes = new ArrayList<>();
 	
-		//System.out.println(female_index_global);
-		//System.out.println(male_index_global);
-		
-		for(int i= 0; i < 10; i++) {
+		for(int i= 0; i < matrix.length; i++) {
 			List<Integer> zero_index = new ArrayList<>();
 			int[] row_temp = new int[nind];
 			row_temp = matrix[i];
@@ -153,15 +149,16 @@ public class miss_analysis_opt {
 					zero_index.add(j);
 				}
 			}
-			System.out.println(zero_index);
+			
 			//boolean T or F if the index of 0 in male or female matches the full list of zero indicies 
 			Boolean compare_fem = zero_index.retainAll(female_index_global);
 			Boolean compare_male = zero_index.retainAll(male_index_global);
+
 			//if the zeroes do match (a F) then it gets added to the sex specific list 
 			//must be in one sex OR the other (meaning that the loci with 0 is strictly in one sex and the loci is exclusively in the other)
+			//exclusive OR - output is only true when one is true and other other is false (or vice versa) 
 			if(compare_fem == false ^ compare_male == false) {
 				final_zero_list.add(i);
-				System.out.println(i);
 			}
 			else {
 				add_to_both_sexes.add(i);
