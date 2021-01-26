@@ -69,4 +69,8 @@ miss_anlaysis_opt.java can now retrieve percentile information (SSLT) from SSLT_
 
 Went back and walked through miss_analysis_opt.java code and realized that separate_groups_by_zeroes() is not actually determining which loci are sex specific. It is just determining the loci that has a few zeroes in one sex and none in the other. This means that the loci is technically in both sexes. So, in order for it to be sex specific it should be not at all in one sex - so there must be 0's in ALL individuals in one sex.
 
-Next time: change if-then parameters in separate_groups_by_zeroes() so it is only adding loci to the final list if there are zeroes in all of one sex. Then, can apply the statistical threshold. So, once the final list is done - can exclude all loci in that list that fall below the SSLT. 
+Next time: change if-then parameters in separate_groups_by_zeroes() so it is only adding loci to the final list if there are zeroes in all of one sex. Then, can apply the statistical threshold. So, once the final list is done - can exclude all loci in that list that fall below the SSLT.
+
+
+Update 1/26/2021
+Had a few updates that didn't get uploaded to github - whoops. The main this here is that I have to make sure the loci that are being added to the list are all zeroes in one sex (indicating that it is missing) and a few or no zeroes in the other (indicating that it is present). Right now, it is only picking up on a few zeroes.  
