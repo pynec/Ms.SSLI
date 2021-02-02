@@ -73,4 +73,27 @@ Next time: change if-then parameters in separate_groups_by_zeroes() so it is onl
 
 
 Update 1/26/2021
-Had a few updates that didn't get uploaded to github - whoops. The main this here is that I have to make sure the loci that are being added to the list are all zeroes in one sex (indicating that it is missing) and a few or no zeroes in the other (indicating that it is present). Right now, it is only picking up on a few zeroes.  
+Had a few updates that didn't get uploaded to github - whoops. The main this here is that I have to make sure the loci that are being added to the list are all zeroes in one sex (indicating that it is missing) and a few or no zeroes in the other (indicating that it is present). Right now, it is only picking up on a few zeroes.
+
+Update 2/2/2021
+Good progess. Fixed the if-then parameters of the separate_groups_by_zeroes() so that it is only adding loci to the final list if there are zeroes in all of one sex. One thing to note here is that these are pretty strict restrictions, so it will be difficult to find loci that are in sex but not another because all of one sex would have to have a zero at that loci. Makes me think. Why include it if that many individuals are missing it? Will need to go back and check filtering parameters once I test this will the larger dataset. Statistical threshold is being applied (but it is basically no threshold because the probability of a loci missing in a random group is pretty much zero all of the time) but this will change with different datasets. 
+
+Assumptions made:
+1. Add pair of allele depth values together for each individual/loci in create_matrix()
+2. basing presence/absence of loci on allele depth
+3. A loci is only sex specific if it is zero in all individuals of a sex (so a zero at index 8 (so one individual female)) is not se
+x specific - See file separate_by_sexes.txt in github folder on computer for more information
+
+
+Things to change eventually:
+1. change int matrix[][] to int[][] temp_zero (since that is its name in the method where it is initalized)
+2. make number of individuals a global variable earlier
+3. Change sex_specific_list name to a matrix based name in separate_by_sexes
+
+
+Next steps:
+1. Go through SSLT_iterations.java (check logic again)
+2. Finish the last step of the program: the exclude() method in the miss_analysis_opt (excluding all loci in the list that fall below the SSLT) -> not hard for this practice dataset since they are both zero
+3. Test with simulated data (to make sure new changes work)
+4. Test with larger real dataset 
+If I don't find anything with the larger real dataset (but do with the simulated data) then may want to go back to filtering steps and see how much missing data I am allowing - may want to re-filter a few steps.
