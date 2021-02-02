@@ -96,7 +96,6 @@ public class miss_analysis_opt {
 			String str_list = list.get(0); String[] split_str = str_list.split(",");
 			int index = 0;
 			SNP_IDs.add(split_str[0]); //list of all SNP IDs
-		
 			//add pair of allele depth values together for each individual/loci 
 			for(int j = 2; j < split_str.length; j += 2) {
 				int sum = Integer.parseInt(split_str[j]) + Integer.parseInt(split_str[j+1]);
@@ -149,22 +148,25 @@ public class miss_analysis_opt {
 					zero_index.add(j);
 				}
 			}
-			
-			//boolean T or F if the index of 0 in male or female matches the full list of zero indicies 
-			Boolean compare_fem = zero_index.retainAll(female_index_global);
-			Boolean compare_male = zero_index.retainAll(male_index_global);
-
-			//if the zeroes do match (a F) then it gets added to the sex specific list 
-			//must be in one sex OR the other (meaning that the loci with 0 is strictly in one sex and the loci is exclusively in the other)
-			//exclusive OR - output is only true when one is true and other other is false (or vice versa) 
-			if(compare_fem == false ^ compare_male == false) {
-				final_zero_list.add(i);
+			if(zero_index.size() == male_index_global.size() || zero_index.size() == female_index_global.size()){
+				//boolean T or F if the index of 0 in male or female matches the full list of zero indicies
+				Boolean compare_fem = zero_index.retainAll(female_index_global);
+				Boolean compare_male = zero_index.retainAll(male_index_global);
+				//if the zeroes do match (a F) then it gets added to the sex specific list 
+				//must be in one sex OR the other (meaning that the loci with 0 is strictly in one sex and the loci is exclusively in the other)
+				//exclusive OR - output is only true when one is true and other other is false (or vice versa) 
+				if(compare_fem == false ^ compare_male == false) {
+					final_zero_list.add(i);
+				}
+				else {
+					add_to_both_sexes.add(i);
+				}
 			}
 			else {
 				add_to_both_sexes.add(i);
 			}
-			
 		}
+		
 		int[][] sex_specific_list = new int[final_zero_list.size()][nind];
 		
 		for(int i = 0; i < final_zero_list.size(); i++) {
@@ -175,7 +177,6 @@ public class miss_analysis_opt {
 		int[][] both_sexes_list = new int[miss_analysis_opt.both_sexes.length + add_to_both_sexes.size()][nind];
 		for(int i = 0; i < miss_analysis_opt.both_sexes.length; i++) {
 			both_sexes_list[i] = miss_analysis_opt.both_sexes[i];
-			
 		}
 		//making final sex_specific_list
 		int index = 0;
@@ -184,6 +185,7 @@ public class miss_analysis_opt {
 			index++;
 		}
 		final_sex_specific = sex_specific_list; final_both_sexes = both_sexes_list; numind = nind;
+		
 	}
 	
 	public int[][] group_B() {
