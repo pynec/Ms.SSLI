@@ -30,7 +30,6 @@ public void split(int[][] matrix) {
 		second = new int[(numind/2)+1][matrix[0].length]; }
 	else {
 		second = new int[numind/2][matrix[0].length]; }
-	
 	//add data to the initialized matrices
 	for(int i = 0; i < numind/2; i++) {
 		first[i] = matrix[i]; }
@@ -38,9 +37,6 @@ public void split(int[][] matrix) {
 	for(int j = numind/2; j< numind; j++) {
 		second[counter] = matrix[j];
 		counter++; }
-//for(int[] row : first) {
-//	System.out.println(Arrays.toString(row));	
-//	}
 	List <Integer> col_list = new ArrayList<>();
 	List <Integer> col_list_second = new ArrayList<>();
 	//find loci with zeroes in the first matrix and add them to the column list (col list)
