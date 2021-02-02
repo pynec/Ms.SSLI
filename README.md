@@ -96,4 +96,4 @@ Next steps:
 2. Finish the last step of the program: the exclude() method in the miss_analysis_opt (excluding all loci in the list that fall below the SSLT) -> not hard for this practice dataset since they are both zero
 3. Test with simulated data (to make sure new changes work)
 4. Test with larger real dataset 
-If I don't find anything with the larger real dataset (but do with the simulated data) then may want to go back to filtering steps and see how much missing data I am allowing - may want to re-filter a few steps.
+If I don't find anything with the larger real dataset (but do with the simulated data) then may want to go back to filtering steps and see how much missing data I am allowing - may want to re-filter a few steps (esp. missingness).
