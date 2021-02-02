@@ -1,0 +1,28 @@
+Details about specific variables to make it easier to review miss_analysis_opt.java
+
+male_index = male_index_global
+female_index = female_index_global
+where male_index_global and female_index_global are global variables
+*lists of indices for each sex 
+*ex. [0,1,2,4,5]
+
+matrix= matrix of all the information from the variants file (loci by ind with AD values) --> loci down, ind across
+
+SNP_IDS; list of SNP IDs (ex. Asm2m113312:20, Asm etc)
+
+zero_list = list containing loci that contain at least one zero in individuals --> so there is a possiblity that they are sex specific
+
+non_zero_list = list that contains no zeroes. They are def not sex specific (i.e. they are present in all individuals)
+
+both_sexes = group_both_sexes
+temp_zero = zeroes
+where group_both_sexes and zeroes are global
+*matrices of zero_list and non_zero list --> basically splitting the matrix in two
+
+matrix (in separate_group_by_zeroes) = temp_zero = zeroes (matrix of loci wht at least one zero)
+
+zero_index = list that gets reset in a loop --> contains index of zero for each row (i.e. what individuals the zero loci are in)
+
+sex_specific_list = a matrix (loci by ind where loci down, ind across) --> loci that are sex-specific (have to pass through the if-then statment preceding it)
+
+both_sexes_list = final_both_sexes (that gets transposed, global var)a matrix (loci by ind where loci down, ind across) --> loci that are not sex-specific (new ones added after the if-then statement)
