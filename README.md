@@ -97,3 +97,18 @@ Next steps:
 3. Test with simulated data (to make sure new changes work)
 4. Test with larger real dataset 
 If I don't find anything with the larger real dataset (but do with the simulated data) then may want to go back to filtering steps and see how much missing data I am allowing - may want to re-filter a few steps (esp. missingness).
+
+Update 2/3/2021
+Double checked the SSLT_iterations.java script. It is doing what it should do, however it is important to note that the restrictions are strict. The loci must be missing in all individuals of one group (which in some cases is 45 individuals). So far, no group has had any loci that hit that mark. Something to think about, but the code is logical (and does what Stovall describes)
+
+Started working on the exclude() method but realized it is hard to write since there are no significant loci right now. So, working on missingness optimzied simulation data to test the program with. Using sal_sim.java as a basis for writing this simualtion. Basically, want it in the same format as variant_test.txt. This will be good for when other people use it because all they have to do is enter how many individuals, loci, and sex specific loci they want - can even be command line information.
+
+Simulation update (missingness_opt_sim.java):
+- sex_info.txt file is complete
+
+Next step (simulation): make the variants file
+- Re-do the initiate_genotypes method--> will have to change basically the whole thing so that there is a SNP ID, location, then random allele depth values (but zeroes for the sex specific loci) **remmeber that the file should have double the allele depth values (2 for each individual because they will get combined in the actual miss_analysis_opt.java program)
+
+Also remember that the sal_sim.java file is making simulation files for GWAS so make sure that I am only putting zeroes in individuals of one sex.
+
+Once I am done withe simulation file, finish up the exclude() method
