@@ -185,6 +185,7 @@ public class miss_analysis_opt {
 			index++;
 		}
 		final_sex_specific = sex_specific_list; final_both_sexes = both_sexes_list; numind = nind;
+
 		
 	}
 	
@@ -206,10 +207,11 @@ public class miss_analysis_opt {
 		return transposed_matrix;
 	}
 	
-	public void exclude() {
-//	for(int[] row : final_sex_specific) {
+	public void exclude(int percentile) {
+//		System.out.println(percentile);
+//	for(int[] row : final_both_sexes) {
 //		System.out.println(Arrays.toString(row));	}
-//	
+////	
 //	System.out.println(final_sex_specific.length);
 //	System.out.println(final_sex_specific[0].length);
 //	System.out.println(female_index_global.size());
@@ -217,6 +219,8 @@ public class miss_analysis_opt {
 	
 	
 	public static void main(String[] args) throws Exception{
+		
+		
 		miss_analysis_opt obj = new miss_analysis_opt();
 		obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
 		obj.separate_groups_by_zeroes();	
@@ -225,7 +229,7 @@ public class miss_analysis_opt {
 		List<Integer> distribution = new ArrayList<>();
 		distribution = percentile_object.iterate(matrix);
 		int percentile = percentile_object.percentile(distribution);
-		obj.exclude();
+		obj.exclude(percentile);
 		
 	}	
 }
