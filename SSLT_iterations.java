@@ -9,6 +9,8 @@ import java.util.Set;
 
 public class SSLT_iterations {
 	int numind; 
+	int num_first;
+	int num_sec;
 	List<Integer> group_one_list;
 	List<Integer> group_two_list;
 	
@@ -24,6 +26,7 @@ public static int[][] shuffle_matrix(int[][] matrix) {
 //split the shuffled matrix into 2 groups and determine which loci in each group has multiple zeroes
 public void split(int[][] matrix) {
 	int nind = matrix.length; numind = nind;
+	num_first = numind/2; 
 	int[][] first = new int[numind/2][matrix[0].length];	
 	int[][] second;
 	if(numind % 2 == 1) {
@@ -37,15 +40,20 @@ public void split(int[][] matrix) {
 	for(int j = numind/2; j< numind; j++) {
 		second[counter] = matrix[j];
 		counter++; }
+	num_sec = counter; 
 	List <Integer> col_list = new ArrayList<>();
 	List <Integer> col_list_second = new ArrayList<>();
 	//find loci with zeroes in the first matrix and add them to the column list (col list)
+	//looping through individuals (eg. 44 because halved) 
 	for(int i = 0; i < first.length; i++) {
 		int[] ind = first[i];
+		//loop through loci 
 		for(int j = 0; j < matrix[0].length; j++) {
 			if(ind[j] == 0) {
 					col_list.add(j);
 				} } }
+	//remember that col_list (group_one_list) is listing the index of loci - not individuals!) 
+	//same with group_two_list and col_list_second 
 	group_one_list = col_list;
 	//find loci with zeroes in the second matrix and add them to the column list (col list)
 	for(int i = 0; i < second.length; i++) {
@@ -54,22 +62,25 @@ public void split(int[][] matrix) {
 			if(ind[j] == 0) {
 				col_list_second.add(j);
 			} }	} group_two_list = col_list_second;
+
 	}
 	
 	
 public int group_specific() {
-	//These loops determine the frequency of each loci in the lists. Want to count the number of loci that appear in all individuals 
+	//These loops determine the frequency of each loci in the lists. Want to count the number of loci that are missing in all individuals of that group 
 		//because that would indicate that they are exclusively in one group 
+
+		//Hashset removes the duplicates so that only unique loci indices are left
 		Set<Integer> unique = new HashSet(group_one_list);
 		Set<Integer> unique_sec = new HashSet(group_two_list);
 		int total_loci=0; List<Integer> group_specific_loci = new ArrayList<>();
 		for(Integer i: unique) {
 			int count =  Collections.frequency(group_one_list, i);
-			if(count == numind) {
+			if(count == num_first) {
 				total_loci++; group_specific_loci.add(i);	} }
 		for(Integer i: unique_sec) {
 			int count_sec = Collections.frequency(group_two_list, i);
-				if(count_sec == numind) {
+				if(count_sec == num_sec) {
 					total_loci++; group_specific_loci.add(i);
 				} } 
 		return total_loci;
@@ -86,6 +97,7 @@ public List<Integer> iterate(int[][] t) {
 		SSLT_iterations object = new SSLT_iterations();
 		object.split(shuffled_matrix);
 		int iterate_loci = object.group_specific(); loci_dist.add(iterate_loci);
+
 	}
 	return loci_dist;
 }
