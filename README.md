@@ -76,6 +76,8 @@ Update 1/26/2021
 Had a few updates that didn't get uploaded to github - whoops. The main this here is that I have to make sure the loci that are being added to the list are all zeroes in one sex (indicating that it is missing) and a few or no zeroes in the other (indicating that it is present). Right now, it is only picking up on a few zeroes.
 
 Update 2/2/2021
+
+
 Good progess. Fixed the if-then parameters of the separate_groups_by_zeroes() so that it is only adding loci to the final list if there are zeroes in all of one sex. One thing to note here is that these are pretty strict restrictions, so it will be difficult to find loci that are in sex but not another because all of one sex would have to have a zero at that loci. Makes me think. Why include it if that many individuals are missing it? Will need to go back and check filtering parameters once I test this will the larger dataset. Statistical threshold is being applied (but it is basically no threshold because the probability of a loci missing in a random group is pretty much zero all of the time) but this will change with different datasets. 
 
 Assumptions made:
@@ -112,3 +114,16 @@ Next step (simulation): make the variants file
 Also remember that the sal_sim.java file is making simulation files for GWAS so make sure that I am only putting zeroes in individuals of one sex.
 
 Once I am done withe simulation file, finish up the exclude() method
+
+
+Update 2/4/2021
+
+Continued working on simulation script (missingness_opt_sim.java). Finished it! 
+1. Wrote a new method that takes the sex list and determines the indices of the females, then transfers it to a new list for the AD matrix. Basically, it determines where the females will be in the AD matrix (remember that the AD matrix contains two values per individual)
+2. Wrote a new method that creates a matrix with AD values
+
+The simulation script fully imitates the variants file, so it should work with the missingness script!
+
+Next step:
+1. Test the simulation script
+2. Finish the exclude() method in the optimized simulation script
