@@ -126,4 +126,14 @@ The simulation script fully imitates the variants file, so it should work with t
 
 Next step:
 1. Test the simulation script
-2. Finish the exclude() method in the optimized simulation script
+2. Finish the exclude() method in the optimized missingness script
+
+Update 2/5/2021
+
+Very exciting progress! Tested the simulation script on the optimized missingness script, and it worked!! It outputs the 5 loci (with all of the AD values) that are sex specific.
+
+Also added a method to the missingness script that outputs the actual loci, not just a matrix of AD values (method = get_SNP_IDs). 
+
+Next step:
+1. Finish exclude() method in the optimized missingness script.
+2. Try testing with larger real dataset 
