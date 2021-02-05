@@ -115,9 +115,9 @@ public List<Integer> fem_AD_index(List<Integer> sex_list){
 
 //method that writes the output to a file 
 public static void write_to_file(String[][] output) throws IOException {
-	FileWriter writer = new FileWriter("test.txt");
+	FileWriter writer = new FileWriter("sim_variants.txt");
 	for(String[] row : output) {
-		writer.write(Arrays.toString(row).replace("[",  "").replace("]","") + System.lineSeparator());
+		writer.write(Arrays.toString(row).replace("[", "").replace("]","").replace(" ", "") + System.lineSeparator());
 	}
 	writer.close();	
 }
