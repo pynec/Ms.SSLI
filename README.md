@@ -132,8 +132,54 @@ Update 2/5/2021
 
 Very exciting progress! Tested the simulation script on the optimized missingness script, and it worked!! It outputs the 5 loci (with all of the AD values) that are sex specific.
 
+
 Also added a method to the missingness script that outputs the actual loci, not just a matrix of AD values (method = get_SNP_IDs). 
 
 Next step:
 1. Finish exclude() method in the optimized missingness script.
 2. Try testing with larger real dataset 
+
+Update 2/8/2021
+
+Started thinking about how to implement the exclude() method and realized that I should write another simulation script. This one would have sex specific loci in both sexes (so loci A is missing in males and loci B is missing in females). Should be easy to write, just a variation of missingness_opt_sim.java. This way, I can make sure that the missingness script works in all ways. But first, should finish writing the exclude() method.
+
+The exclude() method: excluding all candidate loci at individual frequencies lower than the SSLT. So basically have to get the information for the loci that are returned as sex specific. Go into final_sex_specific and assess the individual frequency of that loci in the individuals of the sex that did not have all of the zeroes (because that sex is missing the sex specific loci).
+
+So if the SSLT is 0, the diagram below shows 3 individuals so the individual frequency of Loci A would be 2 and since 2 is above the SSLT (0) it is deemed significantly sex specific. 
+
+Loci A:   0    	 1	3 
+
+Next steps:
+1. Finish exclude() method
+2. Write another simulation script as described above
+3. Try testing with a larger dataset.
+
+
+Exclude() method pseudocode:
+//the ind_frequency list will contain the list of the statistically significantly sex specific loci 
+list ind_frequency; 
+for(int k = 0; k <final_sex_specific.length; k++){
+initiate matrix_row;
+int count = 0;
+for(int i = 0; i < matrix_row.size(); i++){
+	if(i is in male_index_global){
+	     if(matrix_row[i] == 0){
+	     count++; }}}
+ int frequency = 0;
+if(count == male_index_global.size(){
+	 for(int j = 0; j < fem_index_global; j++){
+	 	 if(matrix_row[j] != 0){
+		 frequency++}
+		 }
+if(count == fem_index_global.size(){
+	 for(int j = 0; j < male_index_global; j++){
+	 	 if(matrix_row[j] != 0{
+		 frequency++;
+		 } } } 
+if (frequency > SSLT){
+ind_frequency.add(k);}
+		 }
+		 
+
+		 
+		 
