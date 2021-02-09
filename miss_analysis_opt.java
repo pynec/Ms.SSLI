@@ -39,8 +39,8 @@ public class miss_analysis_opt {
 		//create and object to call other methods on
 		miss_analysis_opt file_obj = new miss_analysis_opt();
 		//import sex info and use that file to create lists of the male and female indices (global variables) 
-		//List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info.txt");
-		List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info_sim.txt");
+		List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info.txt");
+		//List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info_sim.txt");
 		List<Integer> male_index = file_obj.male_index_list(sex_info); male_index_global = male_index;
 		List<Integer> female_index = file_obj.female_index_list(sex_info); female_index_global = female_index; 
 		int[][] matrix = file_obj.create_matrix(filelines,sex_info);
@@ -132,7 +132,6 @@ public class miss_analysis_opt {
 		both_sexes = group_both_sexes;
 		zeroes = temp_zero;
 		
-	
 		return matrix;
 	}
 
@@ -200,6 +199,7 @@ public class miss_analysis_opt {
 		
 	}
 	
+	//method that preps the final_both_sexes matrix for retrieval of percentile information (using the SSLT_interations script)
 	public int[][] group_B() {
 		int[][] ind_matrix = new int[numind][final_both_sexes.length];
 		ind_matrix = transpose(final_both_sexes, numind);
@@ -219,16 +219,43 @@ public class miss_analysis_opt {
 		return transposed_matrix;
 	}
 	
+	//method that determines which loci in final_sex_specific need to be excluded based on the percentile value (SSLT)
 	public void exclude(int percentile) {
-//		System.out.println(percentile);
-//	for(int[] row : final_both_sexes) {
-//		System.out.println(Arrays.toString(row));	}
-////	
-//	System.out.println(final_sex_specific.length);
-//	System.out.println(final_sex_specific[0].length);
-//	System.out.println(female_index_global.size());
+
+	List<Integer> ind_frequency = new ArrayList<>();
+	for(int k = 0; k < final_sex_specific.length; k++) {
+		int[] matrix_row = new int[numind];
+		matrix_row = final_sex_specific[k];
+		int count = 0; int frequency = 0;
+		for(int i = 0; i < numind; i++) {
+			if(male_index_global.contains(i)) {
+				if(matrix_row[i] == 0 ) {
+					count++;
+				} } 
+			}
+		if(count == male_index_global.size()) {
+			for(int j = 0; j < female_index_global.size(); j ++) {
+				if(matrix_row[female_index_global.get(j)] != 0) { frequency++;
+				} } }
+		else {
+			for(int j = 0; j < male_index_global.size(); j++) {
+				if(matrix_row[male_index_global.get(j)] != 0) { frequency ++; 
+			} } }
+		if(frequency > percentile) {
+			ind_frequency.add(k);
+		}
+	}
+
+	//update final_sex_specific 
+	if(ind_frequency.size() != final_sex_specific.length) {
+		int[][] matrix = new int[ind_frequency.size()][numind];
+		for(int i = 0; i < ind_frequency.size(); i++) {
+			int[] matrix_row = new int[numind];
+			matrix_row = final_sex_specific[i];	
+		} }
 	}
 	
+	//method that retreives the loci IDs of the final_sex_specific list (user friendly) 
 	public List<String> get_SNP_IDs(int[][] matrix) {
 		List<String> SNP_list = new ArrayList<>();
 		List<Integer> index_list = new ArrayList<>();
@@ -250,12 +277,10 @@ public class miss_analysis_opt {
 	
 	
 	public static void main(String[] args) throws Exception{
-		
-		
 		miss_analysis_opt obj = new miss_analysis_opt();
-		//obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
+		//int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
 		int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/sim_variants.txt");
-	
+		//int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_missingness.txt");
 		obj.separate_groups_by_zeroes();	
 		int[][] matrix = obj.group_B();
 		SSLT_iterations percentile_object = new SSLT_iterations();
@@ -264,7 +289,7 @@ public class miss_analysis_opt {
 		int percentile = percentile_object.percentile(distribution);
 		obj.exclude(percentile);
 		List<String> output = obj.get_SNP_IDs(variants_matrix); 
-		//System.out.println(output);
+		System.out.println(output);
 		
 	}	
 }
