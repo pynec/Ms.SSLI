@@ -155,31 +155,8 @@ Next steps:
 3. Try testing with a larger dataset.
 
 
-Exclude() method pseudocode:
-//the ind_frequency list will contain the list of the statistically significantly sex specific loci 
-list ind_frequency; 
-for(int k = 0; k <final_sex_specific.length; k++){
-initiate matrix_row;
-int count = 0;
-for(int i = 0; i < matrix_row.size(); i++){
-	if(i is in male_index_global){
-	     if(matrix_row[i] == 0){
-	     count++; }}}
- int frequency = 0;
-if(count == male_index_global.size(){
-	 for(int j = 0; j < fem_index_global; j++){
-	 	 if(matrix_row[j] != 0){
-		 frequency++}
-		 }
-if(count == fem_index_global.size(){
-	 for(int j = 0; j < male_index_global; j++){
-	 	 if(matrix_row[j] != 0{
-		 frequency++;
-		 } } } 
-if (frequency > SSLT){
-ind_frequency.add(k);}
-		 }
-		 
+Update 2/9/2021
+Finished writing the exclude() method. The script is now basically finished (it will obviously be worked on as it is tested extensively).
 
-		 
-		 
+Tried testing with a larger dataset (the full one). Takes a while (>10min) so it will have to be added to graham to run with super big datasets. It is the iterate() method in the SSLT_iterations.java that is taking most the time. Everything else runs in seconds.
+
