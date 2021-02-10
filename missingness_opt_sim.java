@@ -28,13 +28,14 @@ public missingness_opt_sim(int numind, int numloci, int numchr, int sal) {
 public missingness_opt_sim() {}
 
 public String[][] AD_matrix (List<Integer> fem_AD_index){
+	//ind_AD is nind*2 because each individual gets 2 AD values 
 	int ind_AD = nind*2; 
-	
 	String[][] ad_matrix = new String[nloci][ind_AD];
 	String snp = "Asm"; 
+	//loop through sex loci (number given by the user)
 	for(int i = 0; i < sex_loci; i++) {
 		String[] matrix_row = new String[ind_AD];
-		
+		//adding loci information to the beginning of each row (so SNP ID and position) 
 		Integer snp_rand = (int)(Math.random()* Math.floor(100)); Integer pos = (int)(Math.random()*Math.floor(100));
 		String snp_info = snp + snp_rand.toString(); 
 		matrix_row[0] = snp_info; 
@@ -107,11 +108,8 @@ public List<Integer> fem_AD_index(List<Integer> sex_list){
 			}
 		}
 	}
-	return fem_AD_index;
-	
+	return fem_AD_index;	
 }
-
-
 
 //method that writes the output to a file 
 public static void write_to_file(String[][] output) throws IOException {
@@ -129,16 +127,20 @@ public static void write_sex_file(List<Integer> output) throws IOException {
 	}
 	writer.close();
 }
-//method that writes the annotation output to a file 
+
+
+
 public static void main(String[] args) throws Exception{
 	//numind, numloci, numchr, diffsex, sal 
 	missingness_opt_sim output = new missingness_opt_sim(30, 100, 10, 5);
 	List<Integer> sex_list = output.sex_info();
+	System.out.println(sex_list);
 	List<Integer> sex_specific_AD = output.fem_AD_index(sex_list);
+	System.out.println(sex_specific_AD);
 	String[][] ad_matrix = output.AD_matrix(sex_specific_AD);
 
-	write_to_file(ad_matrix);
-	write_sex_file(sex_list);
+	//write_to_file(ad_matrix);
+	//write_sex_file(sex_list);
 	
 }
 
