@@ -160,3 +160,21 @@ Finished writing the exclude() method. The script is now basically finished (it 
 
 Tried testing with a larger dataset (the full one). Takes a while (>10min) so it will have to be added to graham to run with super big datasets. It is the iterate() method in the SSLT_iterations.java that is taking most the time. Everything else runs in seconds.
 
+
+Update 2/26 and 3/1
+Working on updating the simulation script.
+Goal: Have sex specific loci in both sexes --> so example: Loci A is missing in males and loci B is missing in females (it is not missing in both sexes!!)
+
+Idea on updating the missingness_opt_sim.java script ; add back in the diffsex parameter. Basically, this parameter takes 2 (or 3) different values. Right now, the way the script is set up is that it only would allow a 1 (so females have the sex specific loci). I am proposing to add a 0 which would mean that both sexes have sex specific loci. There is an option to add a 2 which would mean that males have the sex specific loci. However, the code would just be the same if I had both 1 and 2 as options because it would just be duplicated. Plus, this is simulated code so it won't make much of a difference.
+
+So, the idea is just to add the 0 option. So, these are the changes that need to be made.
+1. sex_info() method stays the same
+2. fem_AD_index(): this method returns a list of females indices for the allele dpeth matrix (each individual gets 2 AD values)
+UPDATE: write a method male_AD_index() which does the same thing for males
+3. AD_matrix(): this method creates the AD matrix
+UPDATE: change the if, then statement to include values from the male_AD_index()
+
+Next steps:
+1. Make the changes to the missingness_opt_sim.java script as described above
+2. Add the script to Graham, test the large real dataset
+3. Test with other datasets
