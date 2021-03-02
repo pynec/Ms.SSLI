@@ -178,3 +178,11 @@ Next steps:
 1. Make the changes to the missingness_opt_sim.java script as described above
 2. Add the script to Graham, test the large real dataset
 3. Test with other datasets
+
+
+Update 3/2/2021
+Added code to missingness_opt_sim.java to allow for both sexes to have sex specific loci. They won't have the same loci that are sex specific. The script works, so basically the user gives a number of SSL for matrix (eg. 5) and a diffsex parameter (0 or 1). If it is a 1, then just one sex will be sex specific (this has been tested on the missingness script and it works). If it is a 0, then the first half of the SSL (eg. 5/2) will be female sex specific and the second half will be male. I tested it on the missingness script and it doesn't pick up all of the sex specific loci. So, I have to debug the missingness script and figure out what is the issue.
+
+Next steps:
+1. Dive into missingness script (again) and figure out why it is not picking up all of loci when both sexes have SSL
+2. add script to graham
