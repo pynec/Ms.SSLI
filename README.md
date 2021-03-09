@@ -188,4 +188,7 @@ Next steps:
 2. add script to graham
 
 Update 3/8/2021
-looking into why the missingness script isn't working with the new sim data. Found an error in missingness_opt_sim.java that doesn't have to do with why missingness isn't working. So, next time need to go in and figure out why the matrix created in missingness_opt_sim.java is not including the last pair of allele depth values (for the last ind)... I think it has to do with ind_AD being the number of ind * 2 but then using 2 of those values for SNP information. 
+looking into why the missingness script isn't working with the new sim data. Found an error in missingness_opt_sim.java that doesn't have to do with why missingness isn't working. So, next time need to go in and figure out why the matrix created in missingness_opt_sim.java is not including the last pair of allele depth values (for the last ind)... I think it has to do with ind_AD being the number of ind * 2 but then using 2 of those values for SNP information.
+
+Update 3/9/2021
+Fixed the simulation script issue! ind_AD just needed to be ind_AD = ind*2 + 2 (to account for the SNP ID information)
