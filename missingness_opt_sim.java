@@ -31,7 +31,7 @@ public missingness_opt_sim() {}
 
 public String[][] AD_matrix (List<Integer> fem_AD_index){
 	//ind_AD is nind*2 because each individual gets 2 AD values 
-	int ind_AD = nind*2; 
+	int ind_AD = (nind*2)+2; 
 	String[][] ad_matrix = new String[nloci][ind_AD];
 	String snp = "Asm"; 
 	//loop through sex loci (number given by the user)
@@ -70,16 +70,13 @@ public String[][] AD_matrix (List<Integer> fem_AD_index){
 		}
 		ad_matrix[i] = matrix_row;
 	}
-	
-//	for(String[] row : ad_matrix) {
-//	System.out.println(Arrays.toString(row));	}
 	return ad_matrix;
 }
 
 
 public String[][] both_AD_matrix (List<Integer> fem_AD_index, List <Integer> male_AD_index){
 	//ind_AD is nind*2 because each individual gets 2 AD values 
-	int ind_AD = nind*2; 
+	int ind_AD = (nind*2)+2; 
 	String[][] ad_matrix = new String[nloci][ind_AD];
 	String snp = "Asm"; 
 	int first_half_index = sex_loci/2;
@@ -142,9 +139,6 @@ public String[][] both_AD_matrix (List<Integer> fem_AD_index, List <Integer> mal
 		}
 		ad_matrix[i] = matrix_row;
 	}
-
-//	for(String[] row : ad_matrix) {
-//	System.out.println(Arrays.toString(row));	}
 	return ad_matrix;
 }
 
@@ -224,9 +218,8 @@ public static void write_sex_file(List<Integer> output) throws IOException {
 
 public static void main(String[] args) throws Exception{
 	//numind, numloci, numchr, diffsex, sal 
-	missingness_opt_sim output = new missingness_opt_sim(30, 100, 10, 0, 5);
+	missingness_opt_sim output = new missingness_opt_sim(30, 100, 10, 1, 5);
 	List<Integer> sex_list = output.sex_info();
-	System.out.println(sex_list);
 	List<Integer> fem_sex_specific_AD = output.fem_AD_index(sex_list);
 	List<Integer> male_sex_specific_AD = output.male_AD_index(sex_list);
 	//System.out.println(fem_sex_specific_AD);
