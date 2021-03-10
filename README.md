@@ -192,3 +192,6 @@ looking into why the missingness script isn't working with the new sim data. Fou
 
 Update 3/9/2021
 Fixed the simulation script issue! ind_AD just needed to be ind_AD = ind*2 + 2 (to account for the SNP ID information)
+
+Update 3/10/2021
+Working through the missingness script (assumptions,etc.) and I think that the fix of the simulation script yesterday fixed the issue that I was having with missingness. The issue from last week is that it was only picking up on some of the loci when there were SSL in both sexes. I will keep checking that it worked as I work through the script but I think it is fixed!
