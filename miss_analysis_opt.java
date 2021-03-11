@@ -119,7 +119,6 @@ public class miss_analysis_opt {
 			matrix[i] = matrix_row;
 		}
 		SNP_id = SNP_IDs;
-	
 		//make matrices out of the non_zero_list and zero_list (will help make final matrices of group A and B (those that are sex specific and those that are not) 
 		int[][] group_both_sexes = new int[non_zero_list.size()][sex_info.size()];
 		int[][] temp_zero = new int[zero_list.size()][sex_info.size()];
@@ -131,7 +130,6 @@ public class miss_analysis_opt {
 		}
 		both_sexes = group_both_sexes;
 		zeroes = temp_zero;
-		
 		return matrix;
 	}
 
@@ -157,7 +155,7 @@ public class miss_analysis_opt {
 				}
 			}
 			if(zero_index.size() == male_index_global.size() || zero_index.size() == female_index_global.size()){
-				//boolean T or F if the index of 0 in male or female matches the full list of zero indicies
+				//boolean T or F if the index of 0 in male or female matches the full list of zero indices
 				Boolean compare_fem = zero_index.retainAll(female_index_global);
 				Boolean compare_male = zero_index.retainAll(male_index_global);
 				//if the zeroes do match (a F) then it gets added to the sex specific list 
@@ -177,6 +175,7 @@ public class miss_analysis_opt {
 		
 		int[][] sex_specific_list = new int[final_zero_list.size()][nind];
 		
+		//making final sex_specific_list
 		for(int i = 0; i < final_zero_list.size(); i++) {
 			sex_specific_list[i] = matrix[final_zero_list.get(i)];
 		}
@@ -186,7 +185,7 @@ public class miss_analysis_opt {
 		for(int i = 0; i < miss_analysis_opt.both_sexes.length; i++) {
 			both_sexes_list[i] = miss_analysis_opt.both_sexes[i];
 		}
-		//making final sex_specific_list
+	
 		int index = 0;
 		for(int i = miss_analysis_opt.both_sexes.length; i < (miss_analysis_opt.both_sexes.length + add_to_both_sexes.size()); i++) {
 			both_sexes_list[i] = matrix[add_to_both_sexes.get(index)];
