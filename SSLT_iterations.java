@@ -69,10 +69,9 @@ public void split(int[][] matrix) {
 public int group_specific() {
 	//These loops determine the frequency of each loci in the lists. Want to count the number of loci that are missing in all individuals of that group 
 		//because that would indicate that they are exclusively in one group 
-
 		//Hashset removes the duplicates so that only unique loci indices are left
-		Set<Integer> unique = new HashSet(group_one_list);
-		Set<Integer> unique_sec = new HashSet(group_two_list);
+		Set<Integer> unique = new HashSet<Integer>(group_one_list);
+		Set<Integer> unique_sec = new HashSet<Integer>(group_two_list);
 		int total_loci=0; List<Integer> group_specific_loci = new ArrayList<>();
 		for(Integer i: unique) {
 			int count =  Collections.frequency(group_one_list, i);
@@ -113,7 +112,8 @@ public int percentile(List<Integer> distribution) {
 public static void main(String[] args) throws Exception{
 	//retrieve transposed matrix from miss_analysis_opt script
 	miss_analysis_opt obj = new miss_analysis_opt();
-	obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
+	obj.import_file("/Users/cassandrepyne/Documents/sim_variants.txt");
+	//obj.import_file("/Users/cassandrepyne/Documents/variant_missingness.txt");
 	obj.separate_groups_by_zeroes();
 	int[][] t = obj.group_B();
 	SSLT_iterations obj_iterate = new SSLT_iterations();
