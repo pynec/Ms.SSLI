@@ -195,3 +195,6 @@ Fixed the simulation script issue! ind_AD just needed to be ind_AD = ind*2 + 2 (
 
 Update 3/10/2021
 Working through the missingness script (assumptions,etc.) and I think that the fix of the simulation script yesterday fixed the issue that I was having with missingness. The issue from last week is that it was only picking up on some of the loci when there were SSL in both sexes. I will keep checking that it worked as I work through the script but I think it is fixed!
+
+Update 3/15/2021
+Idea from Liz: add in leniency for sex IDs (some phenotypic IDs won't be 100% accurate). So, I could allow for not all loci to be present in an individual (so maybe 90% of individuals of a certain sex must not have it to be missing?)
