@@ -198,3 +198,12 @@ Working through the missingness script (assumptions,etc.) and I think that the f
 
 Update 3/15/2021
 Idea from Liz: add in leniency for sex IDs (some phenotypic IDs won't be 100% accurate). So, I could allow for not all loci to be present in an individual (so maybe 90% of individuals of a certain sex must not have it to be missing?)
+
+Update 3/16/2021
+Added write_to_file method to miss_analysis_opt.java. This method outputs the output list (of statistically significant loci) to a text file.
+
+At this point, the script is at a good place to start testing. First, used the test dataset (variant_test.txt) and got an empty file (i.e. no statistically significant loci).
+
+Next step:
+1. Move scripts to graham
+2. Test with real dataset
