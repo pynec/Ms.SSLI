@@ -1,6 +1,7 @@
 package missingness;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -274,6 +275,13 @@ public class miss_analysis_opt {
 		
 	}
 	
+	public static void write_to_file(List<String> output) throws IOException {
+		FileWriter writer = new FileWriter("sig_output.txt");
+		for(int i = 0; i < output.size(); i++) {
+			writer.write(output.get(i) + " ");
+		}
+		writer.close();
+	}
 	
 	public static void main(String[] args) throws Exception{
 		miss_analysis_opt obj = new miss_analysis_opt();
@@ -288,7 +296,7 @@ public class miss_analysis_opt {
 		int percentile = percentile_object.percentile(distribution);
 		obj.exclude(percentile);
 		List<String> output = obj.get_SNP_IDs(variants_matrix); 
-		System.out.println(output);
+		write_to_file(output);
 		
 	}	
 }
