@@ -40,8 +40,8 @@ public class miss_analysis_opt {
 		//create and object to call other methods on
 		miss_analysis_opt file_obj = new miss_analysis_opt();
 		//import sex info and use that file to create lists of the male and female indices (global variables) 
-		//List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info.txt");
-		List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info_sim.txt");
+		List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info.txt");
+		//List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info_sim.txt");
 		List<Integer> male_index = file_obj.male_index_list(sex_info); male_index_global = male_index;
 		List<Integer> female_index = file_obj.female_index_list(sex_info); female_index_global = female_index; 
 		int[][] matrix = file_obj.create_matrix(filelines,sex_info);
@@ -284,9 +284,19 @@ public class miss_analysis_opt {
 	}
 	
 	public static void main(String[] args) throws Exception{
+		if(args.length > 0) {
+			System.out.println("Command line arguments:");
+			for(String val : args){
+				System.out.println(val);
+			}
+		}
+		else {
+			System.out.println("No command line arguments");
+		}
+		
 		miss_analysis_opt obj = new miss_analysis_opt();
-		//int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
-		int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/sim_variants.txt");
+		int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
+		//int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/sim_variants.txt");
 		//int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_missingness.txt");
 		obj.separate_groups_by_zeroes();	
 		int[][] matrix = obj.group_B();
