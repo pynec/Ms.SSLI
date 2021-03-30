@@ -207,3 +207,18 @@ At this point, the script is at a good place to start testing. First, used the t
 Next step:
 1. Move scripts to graham
 2. Test with real dataset
+
+
+Update 3/30/2021
+Code to take command line arguments:
+
+java -classpath . missingness.miss_analysis_opt
+
+*must type it in the missingness directory
+Path: /Users/cassandrepyne/eclipse-workspace/missingness/src 
+
+(would add the command line arguments after (example: java -classpath . missingness.miss_analysis_opt Hello World) 
+
+If re-doing this:
+first: must compile the class with the code below: 
+javac miss_analysis_opt.java 
