@@ -1,5 +1,6 @@
 package missingness;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -111,9 +112,26 @@ public int percentile(List<Integer> distribution) {
 
 public static void main(String[] args) throws Exception{
 	//retrieve transposed matrix from miss_analysis_opt script
+	int count = 0;
+	File pheno_file = null;
+	File var_file = null;
+	if(args.length > 0) {
+		for(String val : args){
+			if(count == 0) {
+				pheno_file = new File(args[0]);
+			}
+			else {
+				var_file = new File(args[1]);
+			}
+		count++;	
+		}
+	}
+	else {
+		System.out.println("No command line arguments");
+}
 	miss_analysis_opt obj = new miss_analysis_opt();
-	obj.import_file("/Users/cassandrepyne/Documents/sim_variants.txt");
-	//obj.import_file("/Users/cassandrepyne/Documents/variant_missingness.txt");
+	List<String> sex_info = obj.import_sex_info(pheno_file);
+	int[][] variants_matrix = obj.import_file(var_file, sex_info);
 	obj.separate_groups_by_zeroes();
 	int[][] t = obj.group_B();
 	SSLT_iterations obj_iterate = new SSLT_iterations();
