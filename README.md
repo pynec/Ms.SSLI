@@ -221,4 +221,21 @@ Path: /Users/cassandrepyne/eclipse-workspace/missingness/src
 
 If re-doing this:
 first: must compile the class with the code below: 
-javac miss_analysis_opt.java 
+javac miss_analysis_opt.java SSLT_iterations.javaavac miss_analysis_opt.java 
+
+
+Update 3/31/2021
+Progress!
+
+Missingness can now take command line arguments with this code:
+java -classpath . missingness.miss_analysis_opt /Users/cassandrepyne/eclipse-workspace/missingness/src/sex_info_sim.txt /Users/cassandrepyne/Documents/sim_variants.txt
+
+From this, it also seems like it doesn't matter where the files are as long as the paths are accurate (you can see from the above code that the files are from two different folders).
+
+Basically, I had to load the command line arguments as "Files" not "Strings"!
+
+It works, the output file is correct! The output file is also in the missingness/src directory.
+
+Next step:
+load this up to graham now that the command line stuff will work (for the slurm file).
+(I dont think the javac command will be necessary on graham since I think the .jar file is a compiled version of the classes). 
