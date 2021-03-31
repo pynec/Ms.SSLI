@@ -52,7 +52,6 @@ public class miss_analysis_opt {
 	
 	//method to import sex information text file 
 	public List<String> import_sex_info (File pheno_file) throws IOException{
-		System.out.println(pheno_file);
 		Scanner s = new Scanner(pheno_file);
 		List<String> list = new ArrayList<>();
 		while(s.hasNext()) {
@@ -303,10 +302,7 @@ public class miss_analysis_opt {
 			System.out.println("No command line arguments");
 	}
 		
-		//String pheno_file = "\"" + command_line_arguments.get(0) + "\" ";
 		System.out.println(pheno_file);
-		
-		//String var_file = "\"" + command_line_arguments.get(1) + "\" ";
 		System.out.println(var_file);
 		
 		miss_analysis_opt obj = new miss_analysis_opt();
