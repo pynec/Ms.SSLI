@@ -26,8 +26,8 @@ public class miss_analysis_opt {
 
 	
 	//method that takes a file name as input and creates a matrix 
-	public int[][] import_file(String file) throws IOException{
-		Scanner s = new Scanner(new File(file));
+	public int[][] import_file(File var_file, List<String> sex_info) throws IOException{
+		Scanner s = new Scanner(var_file);
 		List<List<String>> filelines = new ArrayList<>();
 		String line = new String();
 		while(s.hasNextLine()) {
@@ -40,7 +40,7 @@ public class miss_analysis_opt {
 		//create and object to call other methods on
 		miss_analysis_opt file_obj = new miss_analysis_opt();
 		//import sex info and use that file to create lists of the male and female indices (global variables) 
-		List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info.txt");
+
 		//List<String> sex_info = file_obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info_sim.txt");
 		List<Integer> male_index = file_obj.male_index_list(sex_info); male_index_global = male_index;
 		List<Integer> female_index = file_obj.female_index_list(sex_info); female_index_global = female_index; 
@@ -51,8 +51,9 @@ public class miss_analysis_opt {
 	}
 	
 	//method to import sex information text file 
-	public List<String> import_sex_info (String file) throws IOException{
-		Scanner s = new Scanner(new File(file));
+	public List<String> import_sex_info (File pheno_file) throws IOException{
+		System.out.println(pheno_file);
+		Scanner s = new Scanner(pheno_file);
 		List<String> list = new ArrayList<>();
 		while(s.hasNext()) {
 			list.add(s.next());
@@ -284,20 +285,38 @@ public class miss_analysis_opt {
 	}
 	
 	public static void main(String[] args) throws Exception{
+		int count = 0;
+		File pheno_file = null;
+		File var_file = null;
 		if(args.length > 0) {
-			System.out.println("Command line arguments:");
 			for(String val : args){
-				System.out.println(val);
+				if(count == 0) {
+					pheno_file = new File(args[0]);
+				}
+				else {
+					var_file = new File(args[1]);
+				}
+			count++;	
 			}
 		}
 		else {
 			System.out.println("No command line arguments");
-		}
+	}
+		
+		//String pheno_file = "\"" + command_line_arguments.get(0) + "\" ";
+		System.out.println(pheno_file);
+		
+		//String var_file = "\"" + command_line_arguments.get(1) + "\" ";
+		System.out.println(var_file);
 		
 		miss_analysis_opt obj = new miss_analysis_opt();
-		int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt");
-		//int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/sim_variants.txt");
+		List<String> sex_info = obj.import_sex_info(pheno_file);
+		int[][] variants_matrix = obj.import_file(var_file, sex_info);
+		//int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/sim_variants.txt", sex_info);
+		//List<String> sex_info = obj.import_sex_info("/Users/cassandrepyne/Documents/sex_info_sim.txt");
+		//int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_test.txt", sex_info);
 		//int[][] variants_matrix = obj.import_file("/Users/cassandrepyne/Documents/variant_missingness.txt");
+		
 		obj.separate_groups_by_zeroes();	
 		int[][] matrix = obj.group_B();
 		SSLT_iterations percentile_object = new SSLT_iterations();
