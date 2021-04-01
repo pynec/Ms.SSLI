@@ -238,4 +238,47 @@ It works, the output file is correct! The output file is also in the missingness
 
 Next step:
 load this up to graham now that the command line stuff will work (for the slurm file).
-(I dont think the javac command will be necessary on graham since I think the .jar file is a compiled version of the classes). 
+(I dont think the javac command will be necessary on graham since I think the .jar file is a compiled version of the classes).
+
+Update 4/1/2021
+Big progress!
+
+HOW TO MAKE A JAR FILE
+
+Directory:
+/Users/cassandrepyne/eclipse-workspace/missingness/src/missingness 
+
+1. make a manifest file: emacs MANIFEST.MF
+
+In the manifest file:
+
+Manifest-Version: 1.0
+Main-Class: missingness.miss_analysis_opt
+
+Where miss_analysis_opt is the class and missingness is the package
+- since there are two classes, we just use the one with the main method (miss_analysis_opt)
+
+2. Place the class files in a directory names after hte package
+
+mkdir missingness
+
+Move miss_analysis_opt.class and SSLT_iterations.class to missingness
+
+
+3. Compile jar file
+
+jar cmf MANIFEST.MF missingness.jar missingness/
+
+4. Test run
+
+java -jar missingness.jar /Users/cassandrepyne/eclipse-workspace/missingness/src/sex_info_sim.txt /Users/cassandrepyne/Documents/sim_variants.txt
+
+
+RUNNING ON GRAHAM
+1. Load modules
+module load  nixpkgs/16.09
+ module load java/13.0.1
+
+2. Test run
+java -jar missingness.jar sex_info_sim.txt sim_variants.txt
+
