@@ -149,29 +149,29 @@ public class miss_analysis_opt {
 			List<Integer> zero_index = new ArrayList<>();
 			int[] row_temp = new int[nind];
 			row_temp = matrix[i];
-			
 			for(int j = 0; j < nind; j++) {
 				if(row_temp[j] == 0) {
 					zero_index.add(j);
 				}
 			}
-			if(zero_index.size() == male_index_global.size() || zero_index.size() == female_index_global.size()){
-				//boolean T or F if the index of 0 in male or female matches the full list of zero indices
-				Boolean compare_fem = zero_index.retainAll(female_index_global);
-				Boolean compare_male = zero_index.retainAll(male_index_global);
-				//if the zeroes do match (a F) then it gets added to the sex specific list 
-				//must be in one sex OR the other (meaning that the loci with 0 is strictly in one sex and the loci is exclusively in the other)
-				//exclusive OR - output is only true when one is true and other other is false (or vice versa) 
-				if(compare_fem == false ^ compare_male == false) {
+			List<Integer> zero_index_male = new ArrayList<>();
+			int[] row_temp_male = new int[nind];
+			row_temp = matrix[i];
+			for(int j = 0; j < nind; j++) {
+				if(row_temp[j] == 0) {
+					zero_index_male.add(j);
+				}
+			}
+			zero_index.retainAll(female_index_global);
+			
+			zero_index_male.retainAll(male_index_global);
+			if(zero_index.size() == female_index_global.size() || zero_index_male.size() == male_index_global.size()) {
 					final_zero_list.add(i);
 				}
 				else {
 					add_to_both_sexes.add(i);
 				}
-			}
-			else {
-				add_to_both_sexes.add(i);
-			}
+		
 		}
 		
 		int[][] sex_specific_list = new int[final_zero_list.size()][nind];
