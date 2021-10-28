@@ -1,284 +1,71 @@
-# Missingness
-Missingness files 
+Respository for all scripts for Ms.SSLI 
 
-Update on miss_analysis_opt.java 8/11/2020
+Ms.SSLI.jar is the .jar file needed to run on a high performance computing cluser (and on a local computer if the input files are small).
+***AS OF OCTOBER 2021, THIS PROGRAM IS STILL A WORK IN PROGRESS!*** 
 
-Currently working on create_matrix() method
-Just made two lists: the index of loci that have zeroes and those that do not
-The next step is to make a matrix of the loci in zero list and those in non zero list (group_both_sexes is non_zero)
 
-will need to make a matrix for the group a loci (for zero_list) 
+Other scripts: sim_data.java, missingness_opt_sim.java are for simulating data for testing of Ms.SSLI
 
-**important: can now initialize those matricies with the size of the zero list and non-zero list 
+USER MANUAL
+Ms.SSLI is a program that aims to detect sex-specific loci from reduced-representation genomic data. In comparison to many other sex determination tools, Ms.SSLI uses the presence of missing data within a data set to identify loci that are exclusively in one sex. For example, if a locus is missing in one sex but present in the other, then it is likely that the locus is sex-specific and may contribute to sex determination in that organism.  Missing data are measured using allele depth values. If a locus has an allele depth value of 0 at an individual, then it would be deemed absent in that individual. In addition to using missing data, Ms.SSLI uses the statistical threshold outline in Stovall2018. 
 
-**both of these matrices should probably be global variables. probably don't even need a return (can be a void method?) 
+INSTALLING Ms.SSLI
+There are two ways to run Ms.SSLI. The first and recommended way is to use a high performance computing cluster. Large data sets may take a long time to run, therefore it is recommended to run Ms.SSLI on a compute cluster. To do this, first download the .jar file from Github (https://github.com/pynec/Missingness). The .jar file contains both the miss_analysis_opt.java and the SSLT_iterations.java files. The downloaded .jar file can then be moved to your computing cluster. The second option is to run Ms.SSLI locally on a computer using the terminal (Mac) or command prompt (Windows). This option is only recommended with small data sets. Similar to the first option, the first step is to download the .jar file from Github. Running Ms.SSLI on a local computer has the same commands as running on a computing cluster, which can be seen below. 
 
+FILE INPUTS
 
-Update on miss_anlysis_opt.java 8/12/2020
+Ms.SSLI is relatively simple to run on a high performance computing cluster or on a local computer. However, the input files have to be in a particular setup.  
+There are two files that are necessary - the variants and phenotype files. I would recommend running Ms.SSLI with simulated data first to determine if there are any issues before using your real data. There is a Java script to simulate data for the two files to test simple Ms.SSLI commands. This script can be found on my Github page (https://github.com/pynec/Missingness). 
 
+VARIANTS FILE
+This file will most likely be the largest file of the two - especially with real data. The variants file is a text file with extracted information from a VCF file using  vcftools. It includes SNP ids, position, and two allele depth values per individual, for each locus. Below is an example of a variants file for 6 SNPs and 10 individuals. 
 
-Finished splitting the original matrix into potential zero matrix and initial loci in both sexes
+Asm23,51947,7,0,7,0,2,0,9,0,7,1,9,0,3,0,7,0,1,0,4,0 
+Asm26,53872,0,0,0,0,0,0,11,0,8,0,11,0,8,0,10,0,1,0,4,1
+Asm72,53897,0,0,0,0,0,0,0,11,0,8,0,11,0,8,0,10,0,1,3,0
+Asm39,8170,7,0,5,0,2,0,0,4,0,9,0,9,0,2,0,4,0,4,0,1
+Asm46,18814,6,0,3,0,0,0,5,0,9,0,5,0,2,0,2,0,3,0,6,0
+Asm20,51974,7,0,7,0,2,0,9,0,7,1,9,0,3,0,7,0,0,0,4,0
 
-made new method (separate_groups_by_zeroes) that takes the potential zero matrix and determines whether these loci are zero in both sexes or just in one (made 2 lists = final_zero_list and add_to_both_sexes)
+To create this file, a VCF is needed. When filtering, it is important to retain the most amount of data possible, as Ms.SSLI relies on missing data. In order to do this, the missingness criteria (--max-missing) should be more than 50 percent. Ideally, more than 70 percent of missing data should be allowed. 
 
-The next step is to put these both bavck into matrices (will have to make a new one for final_zero_list and add the add_to_both_sexes to both_sexes (global matrix)
+To convert from a VCF to the variants file, follow these commands: 
+1. extract allele depth from the VCF
+vcftools --vcf  FILE_NAME.vcf --extract-FORMAT-info AD --out variants
 
-At this point, I will have 2 matrcies: GROUP A and GROUP B
+2. convert to text file 
+sed 's/\t/,/g' variants.AD.FORMAT > variants.txt
 
-After that, the next step is to deal with the both_sexes matrix and split into 2 random mixed sex subgroups and asses frequency of loci occuring in just one subgroup
+Depending on the formatting of your data, you may need to use Unix commands to remove extra characters or line breaks. 
 
+PHENOTYPE FILE
+The phenotype file includes sex information for each individual. These values must be numeric, not characters. Males should be denoted using a 1 and 2 for females. The phenotype file includes sexed individuals with variable reliability, as researchers' confidence in the phenotypic identification can vary depending on the organism and field technician. An example file can be seen below, with 10 individuals.
 
-Update on miss_analysis_opt.java 8/13/2020
-Made two new matricies (one is final in both sexes matrix and the other is the final in one sex matrix)
-These are the final GROUP A and GROUP B matricies 
+2 
+2
+2 
+1 
+1 
+2 
+1 
+2 
+1 
+2 
 
 
-Update on miss_analysis_opt.java 9/15/2020
+CODE
+##When running on a computing cluster, load modules 
+module load nixpkgs/16.09 
+module load java/13.0.1
 
-Started working on the determining the SSLT (99th percentile of chance distribution).
-Using group B (non-sex specific loci) but matrix needs to be transposed in order to split matrix by individuals.
-So wrote method transpose() that transposes matrices
-Idea: shuffle transposed matrix rows (so by individual) then take the first half and determine frequency of loci then do the same with the second half. Will have to do this for multiple iterations.
-Next step: Try to split the matrix in half.
+##Command to run Ms.SSLI
+java -jar MsSSLI.jar phenotype_file.txt variants_file.txt
 
-Update on miss_analysis_opt.java 9/16/2020
 
-Wrote a method to shuffle the rows of the transposed matrix (method = shuffle_matrix()). Next step: can now recursively shuffle the matrix and take the first half the matrix as mixed sex group 1 and assess frequency of loci.
+OUTPUT
+There is one output file of Ms.SSLI. It contains the SNP IDs and positions of all of the significantly sex-specific loci. 
 
+Questions and Answers
+Q: What if my data does not have all individuals sexed? 
 
-Update on miss_analysis_opt.java 10/22/2020
-Added the SSLT_iteration.java script. This script's goal is to shuffle the transposed matrix multiple times and split the matrix into 2 random groups each time. In addition, it will estimate the loci that end up in just one group. So far, the script can split the dataset and determine how many zeroes are in each group (the zeroes indicate that the loci is missing in that group so theoretically if all individuals are missing that loci (all zeroes) and it is in the other group than it would be exclusively in one group). So, the next step is to compare the lists and determine which loci are in just one of the lists. The thing to note though is that it is going to be pretty unlikely that all individuals are missing a loci so will have to determine a threshold for how many individuals must have a zero for it to be in the list.
-
-So next time: Finish comparing the two lists (only keep loci that are in just one list) and then run that script multiple times. The goal is to add the number of loci that are in just on group to a list and then take the 99th percentile of that list. (so add the loci but also how many individual it occurs in) - see page 6 of Stovall paper 
-
-Do remember that the Stovall paper does say that it is an "estimate" of the number of loci.
-
-Update on miss_analysis_opt.java 10/26/2020
-Stovall paper= find SSLT and that is how you determine which loci are actually sex specific. This means that just because you have loci that are just in one sex it does not mean that they are actually sex specific. So, by determining the SSLT, you now have a threshold by which you can determine which loci are actually sex specific. This is becasue the SSLT is the number of loci that appear in just one sex by chance so if you have a sex specific loci that occurs in more individuals than by "chance (SSLT)" then it should be significanly sex specific.
-
-So, the issue that I am having is fine. This is because even if there are no loci that occur exclusively in one sex by chance than the SSLT would be super low (or 0) so that would indicate that to be sex specific in this system, it doesn't have a minimum number of individuals is must be in.
-
-Finished the SSLT script. So, I added three  methods. group_specific() finds the loci that are just in one sex by counting the number of loci that appear in ALL individuals (will most likely be zero for the small datasets). iterate() is the method that gets the distribution of the number of loci that are exclusively in one group (can adjust the number of times it iterates - should be 1000). percentile() determines the 99th percentile of the distribution.
-
-So next time: double check the percentile method - make sure it is the most efficient. Then, go back to miss_analysis_opt and get the percentile from SSLT_iterations. Then, exclude all loci in GROUP A that fall below the SSLT.
-
-
-Update 10/27/2020
-
-miss_anlaysis_opt.java can now retrieve percentile information (SSLT) from SSLT_iterations.java.
-
-Went back and walked through miss_analysis_opt.java code and realized that separate_groups_by_zeroes() is not actually determining which loci are sex specific. It is just determining the loci that has a few zeroes in one sex and none in the other. This means that the loci is technically in both sexes. So, in order for it to be sex specific it should be not at all in one sex - so there must be 0's in ALL individuals in one sex.
-
-Next time: change if-then parameters in separate_groups_by_zeroes() so it is only adding loci to the final list if there are zeroes in all of one sex. Then, can apply the statistical threshold. So, once the final list is done - can exclude all loci in that list that fall below the SSLT.
-
-
-Update 1/26/2021
-Had a few updates that didn't get uploaded to github - whoops. The main this here is that I have to make sure the loci that are being added to the list are all zeroes in one sex (indicating that it is missing) and a few or no zeroes in the other (indicating that it is present). Right now, it is only picking up on a few zeroes.
-
-Update 2/2/2021
-
-
-Good progess. Fixed the if-then parameters of the separate_groups_by_zeroes() so that it is only adding loci to the final list if there are zeroes in all of one sex. One thing to note here is that these are pretty strict restrictions, so it will be difficult to find loci that are in sex but not another because all of one sex would have to have a zero at that loci. Makes me think. Why include it if that many individuals are missing it? Will need to go back and check filtering parameters once I test this will the larger dataset. Statistical threshold is being applied (but it is basically no threshold because the probability of a loci missing in a random group is pretty much zero all of the time) but this will change with different datasets. 
-
-Assumptions made:
-1. Add pair of allele depth values together for each individual/loci in create_matrix()
-2. basing presence/absence of loci on allele depth
-3. A loci is only sex specific if it is zero in all individuals of a sex (so a zero at index 8 (so one individual female)) is not se
-x specific - See file separate_by_sexes.txt in github folder on computer for more information
-
-
-Things to change eventually:
-1. change int matrix[][] to int[][] temp_zero (since that is its name in the method where it is initalized)
-2. make number of individuals a global variable earlier
-3. Change sex_specific_list name to a matrix based name in separate_by_sexes
-
-
-Next steps:
-1. Go through SSLT_iterations.java (check logic again)
-2. Finish the last step of the program: the exclude() method in the miss_analysis_opt (excluding all loci in the list that fall below the SSLT) -> not hard for this practice dataset since they are both zero
-3. Test with simulated data (to make sure new changes work)
-4. Test with larger real dataset 
-If I don't find anything with the larger real dataset (but do with the simulated data) then may want to go back to filtering steps and see how much missing data I am allowing - may want to re-filter a few steps (esp. missingness).
-
-Update 2/3/2021
-Double checked the SSLT_iterations.java script. It is doing what it should do, however it is important to note that the restrictions are strict. The loci must be missing in all individuals of one group (which in some cases is 45 individuals). So far, no group has had any loci that hit that mark. Something to think about, but the code is logical (and does what Stovall describes)
-
-Started working on the exclude() method but realized it is hard to write since there are no significant loci right now. So, working on missingness optimzied simulation data to test the program with. Using sal_sim.java as a basis for writing this simualtion. Basically, want it in the same format as variant_test.txt. This will be good for when other people use it because all they have to do is enter how many individuals, loci, and sex specific loci they want - can even be command line information.
-
-Simulation update (missingness_opt_sim.java):
-- sex_info.txt file is complete
-
-Next step (simulation): make the variants file
-- Re-do the initiate_genotypes method--> will have to change basically the whole thing so that there is a SNP ID, location, then random allele depth values (but zeroes for the sex specific loci) **remmeber that the file should have double the allele depth values (2 for each individual because they will get combined in the actual miss_analysis_opt.java program)
-
-Also remember that the sal_sim.java file is making simulation files for GWAS so make sure that I am only putting zeroes in individuals of one sex.
-
-Once I am done withe simulation file, finish up the exclude() method
-
-
-Update 2/4/2021
-
-Continued working on simulation script (missingness_opt_sim.java). Finished it! 
-1. Wrote a new method that takes the sex list and determines the indices of the females, then transfers it to a new list for the AD matrix. Basically, it determines where the females will be in the AD matrix (remember that the AD matrix contains two values per individual)
-2. Wrote a new method that creates a matrix with AD values
-
-The simulation script fully imitates the variants file, so it should work with the missingness script!
-
-Next step:
-1. Test the simulation script
-2. Finish the exclude() method in the optimized missingness script
-
-Update 2/5/2021
-
-Very exciting progress! Tested the simulation script on the optimized missingness script, and it worked!! It outputs the 5 loci (with all of the AD values) that are sex specific.
-
-
-Also added a method to the missingness script that outputs the actual loci, not just a matrix of AD values (method = get_SNP_IDs). 
-
-Next step:
-1. Finish exclude() method in the optimized missingness script.
-2. Try testing with larger real dataset 
-
-Update 2/8/2021
-
-Started thinking about how to implement the exclude() method and realized that I should write another simulation script. This one would have sex specific loci in both sexes (so loci A is missing in males and loci B is missing in females). Should be easy to write, just a variation of missingness_opt_sim.java. This way, I can make sure that the missingness script works in all ways. But first, should finish writing the exclude() method.
-
-The exclude() method: excluding all candidate loci at individual frequencies lower than the SSLT. So basically have to get the information for the loci that are returned as sex specific. Go into final_sex_specific and assess the individual frequency of that loci in the individuals of the sex that did not have all of the zeroes (because that sex is missing the sex specific loci).
-
-So if the SSLT is 0, the diagram below shows 3 individuals so the individual frequency of Loci A would be 2 and since 2 is above the SSLT (0) it is deemed significantly sex specific. 
-
-Loci A:   0    	 1	3 
-
-Next steps:
-1. Finish exclude() method
-2. Write another simulation script as described above
-3. Try testing with a larger dataset.
-
-
-Update 2/9/2021
-Finished writing the exclude() method. The script is now basically finished (it will obviously be worked on as it is tested extensively).
-
-Tried testing with a larger dataset (the full one). Takes a while (>10min) so it will have to be added to graham to run with super big datasets. It is the iterate() method in the SSLT_iterations.java that is taking most the time. Everything else runs in seconds.
-
-
-Update 2/26 and 3/1
-Working on updating the simulation script.
-Goal: Have sex specific loci in both sexes --> so example: Loci A is missing in males and loci B is missing in females (it is not missing in both sexes!!)
-
-Idea on updating the missingness_opt_sim.java script ; add back in the diffsex parameter. Basically, this parameter takes 2 (or 3) different values. Right now, the way the script is set up is that it only would allow a 1 (so females have the sex specific loci). I am proposing to add a 0 which would mean that both sexes have sex specific loci. There is an option to add a 2 which would mean that males have the sex specific loci. However, the code would just be the same if I had both 1 and 2 as options because it would just be duplicated. Plus, this is simulated code so it won't make much of a difference.
-
-So, the idea is just to add the 0 option. So, these are the changes that need to be made.
-1. sex_info() method stays the same
-2. fem_AD_index(): this method returns a list of females indices for the allele dpeth matrix (each individual gets 2 AD values)
-UPDATE: write a method male_AD_index() which does the same thing for males
-3. AD_matrix(): this method creates the AD matrix
-UPDATE: change the if, then statement to include values from the male_AD_index()
-
-Next steps:
-1. Make the changes to the missingness_opt_sim.java script as described above
-2. Add the script to Graham, test the large real dataset
-3. Test with other datasets
-
-
-Update 3/2/2021
-Added code to missingness_opt_sim.java to allow for both sexes to have sex specific loci. They won't have the same loci that are sex specific. The script works, so basically the user gives a number of SSL for matrix (eg. 5) and a diffsex parameter (0 or 1). If it is a 1, then just one sex will be sex specific (this has been tested on the missingness script and it works). If it is a 0, then the first half of the SSL (eg. 5/2) will be female sex specific and the second half will be male. I tested it on the missingness script and it doesn't pick up all of the sex specific loci. So, I have to debug the missingness script and figure out what is the issue.
-
-Next steps:
-1. Dive into missingness script (again) and figure out why it is not picking up all of loci when both sexes have SSL
-2. add script to graham
-
-Update 3/8/2021
-looking into why the missingness script isn't working with the new sim data. Found an error in missingness_opt_sim.java that doesn't have to do with why missingness isn't working. So, next time need to go in and figure out why the matrix created in missingness_opt_sim.java is not including the last pair of allele depth values (for the last ind)... I think it has to do with ind_AD being the number of ind * 2 but then using 2 of those values for SNP information.
-
-Update 3/9/2021
-Fixed the simulation script issue! ind_AD just needed to be ind_AD = ind*2 + 2 (to account for the SNP ID information)
-
-Update 3/10/2021
-Working through the missingness script (assumptions,etc.) and I think that the fix of the simulation script yesterday fixed the issue that I was having with missingness. The issue from last week is that it was only picking up on some of the loci when there were SSL in both sexes. I will keep checking that it worked as I work through the script but I think it is fixed!
-
-Update 3/15/2021
-Idea from Liz: add in leniency for sex IDs (some phenotypic IDs won't be 100% accurate). So, I could allow for not all loci to be present in an individual (so maybe 90% of individuals of a certain sex must not have it to be missing?)
-
-Update 3/16/2021
-Added write_to_file method to miss_analysis_opt.java. This method outputs the output list (of statistically significant loci) to a text file.
-
-At this point, the script is at a good place to start testing. First, used the test dataset (variant_test.txt) and got an empty file (i.e. no statistically significant loci).
-
-Next step:
-1. Move scripts to graham
-2. Test with real dataset
-
-
-Update 3/30/2021
-Code to take command line arguments:
-
-java -classpath . missingness.miss_analysis_opt
-
-*must type it in the missingness directory
-Path: /Users/cassandrepyne/eclipse-workspace/missingness/src 
-
-(would add the command line arguments after (example: java -classpath . missingness.miss_analysis_opt Hello World) 
-
-If re-doing this:
-first: must compile the class with the code below: 
-javac miss_analysis_opt.java SSLT_iterations.javaavac miss_analysis_opt.java 
-
-
-Update 3/31/2021
-Progress!
-
-Missingness can now take command line arguments with this code:
-java -classpath . missingness.miss_analysis_opt /Users/cassandrepyne/eclipse-workspace/missingness/src/sex_info_sim.txt /Users/cassandrepyne/Documents/sim_variants.txt
-
-From this, it also seems like it doesn't matter where the files are as long as the paths are accurate (you can see from the above code that the files are from two different folders).
-
-Basically, I had to load the command line arguments as "Files" not "Strings"!
-
-It works, the output file is correct! The output file is also in the missingness/src directory.
-
-Next step:
-load this up to graham now that the command line stuff will work (for the slurm file).
-(I dont think the javac command will be necessary on graham since I think the .jar file is a compiled version of the classes).
-
-Update 4/1/2021
-Big progress!
-
-HOW TO MAKE A JAR FILE
-
-Directory:
-/Users/cassandrepyne/eclipse-workspace/missingness/src/missingness 
-
-1. make a manifest file: emacs MANIFEST.MF
-
-In the manifest file:
-
-Manifest-Version: 1.0
-Main-Class: missingness.miss_analysis_opt
-
-Where miss_analysis_opt is the class and missingness is the package
-- since there are two classes, we just use the one with the main method (miss_analysis_opt)
-
-2. Place the class files in a directory names after hte package
-
-mkdir missingness
-
-Move miss_analysis_opt.class and SSLT_iterations.class to missingness
-
-
-3. Compile jar file
-
-jar cmf MANIFEST.MF missingness.jar missingness/
-
-4. Test run
-
-java -jar missingness.jar /Users/cassandrepyne/eclipse-workspace/missingness/src/sex_info_sim.txt /Users/cassandrepyne/Documents/sim_variants.txt
-
-
-RUNNING ON GRAHAM
-1. Load modules
-module load  nixpkgs/16.09
- module load java/13.0.1
-
-2. Test run
-java -jar missingness.jar sex_info_sim.txt sim_variants.txt
-
+A: Those individuals would have to be removed, as  Ms.SSLI can only use individuals that have been sexed. 
