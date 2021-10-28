@@ -100,7 +100,7 @@ public class miss_analysis_opt {
 			list = filelines.get(i);
 			String str_list = list.get(0); String[] split_str = str_list.split(",");
 			int index = 0;
-			SNP_IDs.add(split_str[0]); //list of all SNP IDs
+			SNP_IDs.add(split_str[0] + ":" + split_str[1]); //list of all SNP IDs
 			
 			//add pair of allele depth values together for each individual/loci 
 			for(int j = 2; j < split_str.length; j += 2) {
